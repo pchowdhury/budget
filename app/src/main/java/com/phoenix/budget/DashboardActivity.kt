@@ -8,12 +8,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityDashboardBinding
+import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.persenter.DashboardPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : AppCompatActivity(), DashboardView {
     lateinit var binding:ActivityDashboardBinding
     lateinit var presenter: DashboardPresenter
+    val  menuFragment = MenuFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +23,17 @@ class DashboardActivity : AppCompatActivity(), DashboardView {
         setSupportActionBar(toolbar)
         presenter = DashboardPresenter(this)
         binding.presenter = presenter
+        supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
     }
 
     override fun cancelMenu() {
        fab.rotation= 0f
+        menuFragment.collapse()
     }
 
     override fun showMenu() {
         fab.rotation= 45f
+        menuFragment.expand()
     }
 
     override fun showError(text: String) {
