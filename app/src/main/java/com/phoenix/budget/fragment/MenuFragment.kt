@@ -38,7 +38,7 @@ class MenuFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        val TAG: String = "Entity.byName"
+        val TAG: String = "MenuFragment"
     }
 
     private lateinit var binding: FragmentMenuBinding
@@ -61,7 +61,6 @@ class MenuFragment : Fragment() {
         RADIUS = radius + (radiusIncr * menu.size)
         binding.container.postDelayed({ createMenus() }, 100)
         binding.fab.setOnClickListener({ showOrHideMenu() })
-//        binding.root.setOnClickListener({ closeIfOpen() })
         return binding.root
     }
 
