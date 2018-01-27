@@ -61,7 +61,14 @@ class MenuFragment : Fragment() {
         RADIUS = radius + (radiusIncr * menu.size)
         binding.container.postDelayed({ createMenus() }, 100)
         binding.fab.setOnClickListener({ showOrHideMenu() })
+//        binding.root.setOnClickListener({ closeIfOpen() })
         return binding.root
+    }
+
+    private fun closeIfOpen() {
+        if (isShowingMenu) {
+            showOrHideMenu()
+        }
     }
 
     private fun createMenus() {
@@ -85,7 +92,7 @@ class MenuFragment : Fragment() {
             val textView = AppCompatTextView(context)
             textView.gravity = Gravity.CENTER
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.menu_font_size))
-            ViewCompat.setBackground(textView, ContextCompat.getDrawable(context, R.drawable.border_bg))
+            ViewCompat.setBackground(textView, ContextCompat.getDrawable(context, R.drawable.menu_selector))
             textView.setTextColor(Color.WHITE)
             textView.setOnClickListener({ view ->
                 onSelectMenu((view.tag as PopMenuItem).menuId)

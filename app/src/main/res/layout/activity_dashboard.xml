@@ -47,8 +47,8 @@
 
         <FrameLayout
             android:id="@+id/menu_container"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom|center_horizontal"/>
 
     </android.support.design.widget.CoordinatorLayout>
