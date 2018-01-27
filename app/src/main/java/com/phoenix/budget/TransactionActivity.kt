@@ -17,9 +17,15 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_transaction)
-        setSupportActionBar(toolbar)
+        configureToolBar()
         presenter = TransactionPresenter(this)
         binding.presenter = presenter
+    }
+
+    private fun configureToolBar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun showError(text: String) {
@@ -28,15 +34,26 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_dashboard, menu)
+        menuInflater.inflate(R.menu.menu_transaction, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings ->
+            R.id.action_ok -> {
+                finish()
                 return true
+            }
+            android.R.id.home -> {
+                finish()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onNavigateUp(): Boolean {
+        finish()
+        return super.onNavigateUp()
     }
 }
