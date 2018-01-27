@@ -1,5 +1,6 @@
 package com.phoenix.budget
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -12,7 +13,7 @@ import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.persenter.DashboardPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class DashboardActivity : AppCompatActivity(), DashboardView, MenuCallback {
+class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
     lateinit var binding:ActivityDashboardBinding
     lateinit var presenter: DashboardPresenter
     val  menuFragment = MenuFragment()
@@ -50,5 +51,10 @@ class DashboardActivity : AppCompatActivity(), DashboardView, MenuCallback {
                 return true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun startTransaction(){
+        val intent = Intent(this, TransactionActivity::class.java)
+        startActivity(intent)
     }
 }

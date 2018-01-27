@@ -1,26 +1,26 @@
 package com.phoenix.budget.persenter
 
-import com.phoenix.budget.DashboardView
+import com.phoenix.budget.DashboardCallback
 
 /**
  * Created by Pushpan on 26/01/18.
  */
-class DashboardPresenter(thisDashboard: DashboardView) {
-    var dashboard: DashboardView = thisDashboard
+class DashboardPresenter(thisDashboard: DashboardCallback) {
+    var dashboard: DashboardCallback = thisDashboard
     fun selectExpense() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dashboard.startTransaction()
     }
 
     fun selectFixedIncome() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dashboard.startTransaction()
     }
 
     fun selectFixedExpense() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dashboard.startTransaction()
     }
 
     fun selectIncome() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dashboard.startTransaction()
     }
 
 
