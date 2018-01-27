@@ -5,7 +5,6 @@
     tools:context="com.phoenix.budget.DashboardActivity">
 
     <data>
-
         <variable
             name="presenter"
             type="com.phoenix.budget.persenter.DashboardPresenter" />
@@ -50,18 +49,7 @@
             android:id="@+id/menu_container"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:layout_gravity="bottom|center_horizontal">
-
-        </FrameLayout>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:onClick="@{() -> presenter.showOrHideMenu()}"
-            app:layout_anchor="@+id/scrollview"
-            app:layout_anchorGravity="bottom|center_horizontal"
-            app:srcCompat="@drawable/add_items"/>
+            android:layout_gravity="bottom|center_horizontal"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

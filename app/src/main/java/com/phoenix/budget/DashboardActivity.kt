@@ -8,11 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityDashboardBinding
+import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.persenter.DashboardPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class DashboardActivity : AppCompatActivity(), DashboardView {
+class DashboardActivity : AppCompatActivity(), DashboardView, MenuCallback {
     lateinit var binding:ActivityDashboardBinding
     lateinit var presenter: DashboardPresenter
     val  menuFragment = MenuFragment()
@@ -26,16 +27,6 @@ class DashboardActivity : AppCompatActivity(), DashboardView {
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
     }
 
-    override fun cancelMenu() {
-       fab.rotation= 0f
-        menuFragment.collapse()
-    }
-
-    override fun showMenu() {
-        fab.rotation= 45f
-        menuFragment.expand()
-    }
-
     override fun showError(text: String) {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
@@ -46,11 +37,15 @@ class DashboardActivity : AppCompatActivity(), DashboardView {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    override fun onSelectExpense() = presenter.selectExpense()
 
+    override fun onSelectFixedExpense()  = presenter.selectFixedExpense()
+
+    override fun onSelectIncome()  = presenter.selectIncome()
+
+    override fun onSelectFixedIncome()  = presenter.selectFixedIncome()
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings ->
                 return true
