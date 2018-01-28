@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,8 +19,8 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawableLeft="@drawable/new_entry"
-            android:drawableStart="@drawable/new_entry"
             android:drawablePadding="@dimen/icon_padding"
+            android:drawableStart="@drawable/new_entry"
             android:drawableTint="@android:color/darker_gray"
             android:hint="@string/hint_label"
             android:padding="@dimen/transaction_padding" />
@@ -52,15 +51,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
+            android:drawableEnd="@drawable/dial_pad"
             android:drawableLeft="@drawable/time"
-            android:drawableStart="@drawable/time"
             android:drawablePadding="@dimen/icon_padding"
             android:drawableRight="@drawable/dial_pad"
-            android:drawableEnd="@drawable/dial_pad"
+            android:drawableStart="@drawable/time"
             android:drawableTint="@android:color/darker_gray"
             android:gravity="center_vertical"
             android:padding="@dimen/transaction_padding"
-            android:text="@string/hint_date"/>
+            android:text="@string/hint_date" />
 
         <View
             android:layout_width="match_parent"
@@ -72,15 +71,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:drawableStart="@drawable/note"
             android:drawableLeft="@drawable/note"
             android:drawablePadding="@dimen/icon_padding"
+            android:drawableStart="@drawable/note"
             android:drawableTint="@android:color/darker_gray"
             android:gravity="top|left|start"
             android:hint="@string/hint_notes"
             android:lines="3"
             android:maxLines="3"
             android:padding="@dimen/transaction_padding" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
+        <com.phoenix.budget.view.CategoryView
+            android:id="@+id/categoryView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
 
     </LinearLayout>
 </ScrollView>
