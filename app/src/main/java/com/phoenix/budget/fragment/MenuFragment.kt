@@ -47,10 +47,10 @@ class MenuFragment : Fragment() {
     var isShowingMenu: Boolean = false
 
     private val menu: MutableList<PopMenuItem> = mutableListOf(
-            PopMenuItem(0, "Expense"),
-            PopMenuItem(1, "Fixed\nExpense"),
-            PopMenuItem(2, "Income"),
-            PopMenuItem(3, "Fixed\nIncome")
+            PopMenuItem(PopMenuItemType.Expense),
+            PopMenuItem(PopMenuItemType.FixedExpense),
+            PopMenuItem(PopMenuItemType.Income),
+            PopMenuItem(PopMenuItemType.FixedIncome)
     )
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -80,8 +80,8 @@ class MenuFragment : Fragment() {
         val startAngle = 180 + variable
         var longestText = ""
         for (item in menu) {
-            if (item.menuText.length >= longestText.length) {
-                longestText = item.menuText
+            if (item.menuId.label.length >= longestText.length) {
+                longestText = item.menuId.label
             }
         }
         val width = context.resources.getDimension(R.dimen.menu_width).toInt()
@@ -97,7 +97,7 @@ class MenuFragment : Fragment() {
                 onSelectMenu((view.tag as PopMenuItem).menuId)
             })
             val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(width, height)
-            textView.text = item.menuText
+            textView.text = item.menuId.label
             textView.tag = item
             binding.container.addView(textView, params)
             item.point.x = centerX - (width / 2)
@@ -113,14 +113,9 @@ class MenuFragment : Fragment() {
         binding.container.visibility = View.INVISIBLE
     }
 
-    private fun onSelectMenu(menuId: Int) {
+    private fun onSelectMenu(menuId: PopMenuItemType) {
         val callback = Fragments.resolveListener(this, MenuCallback::class.java)
-        when (menuId) {
-            0 -> callback?.onSelectExpense()
-            1 -> callback?.onSelectFixedExpense()
-            2 -> callback?.onSelectIncome()
-            3 -> callback?.onSelectFixedIncome()
-        }
+        callback?.onSelectMenuItem(menuId)
         showOrHideMenu()
     }
 
@@ -183,11 +178,10 @@ class MenuFragment : Fragment() {
         isShowingMenu = !isShowingMenu
     }
 
-    class PopMenuItem(menuId: Int, menuText: String) {
+    class PopMenuItem(menuId: PopMenuItemType) {
         var point: PointF = PointF()
         var toPoint: PointF = PointF()
         var degrees: Float = 0f
-        var menuId: Int = menuId
-        var menuText: String = menuText
+        var menuId: PopMenuItemType = menuId
     }
 }

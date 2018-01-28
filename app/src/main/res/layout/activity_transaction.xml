@@ -31,8 +31,8 @@
         </android.support.design.widget.AppBarLayout>
 
         <include
-            android:id="@+id/scrollview"
-            layout="@layout/content_dashboard" />
+            android:id="@+id/scrollview" android:layout_width="match_parent" android:layout_height="wrap_content"
+            layout="@layout/content_transaction" android:layout_marginTop="?attr/actionBarSize"/>
 
 
     </android.support.design.widget.CoordinatorLayout>

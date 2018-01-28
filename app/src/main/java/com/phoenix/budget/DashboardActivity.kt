@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityDashboardBinding
 import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
+import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.persenter.DashboardPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
@@ -37,13 +38,7 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         return true
     }
 
-    override fun onSelectExpense() = presenter.selectExpense()
-
-    override fun onSelectFixedExpense()  = presenter.selectFixedExpense()
-
-    override fun onSelectIncome()  = presenter.selectIncome()
-
-    override fun onSelectFixedIncome()  = presenter.selectFixedIncome()
+    override fun onSelectMenuItem(menuItem: PopMenuItemType) = startTransaction(menuItem)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -53,8 +48,9 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         }
     }
 
-    override fun startTransaction(){
+     fun startTransaction(menuItem: PopMenuItemType){
         val intent = Intent(this, TransactionActivity::class.java)
+         intent.putExtra(TransactionActivity.MODE, menuItem.ordinal)
         startActivity(intent)
     }
 }

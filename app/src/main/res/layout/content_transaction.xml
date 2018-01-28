@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.phoenix.budget.TransactionActivity"
+    tools:showIn="@layout/activity_transaction">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/transaction_border_bg"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableLeft="@drawable/new_entry"
+            android:drawableStart="@drawable/new_entry"
+            android:drawablePadding="@dimen/icon_padding"
+            android:drawableTint="@android:color/darker_gray"
+            android:hint="@string/hint_label"
+            android:padding="@dimen/transaction_padding" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableLeft="@drawable/dollar"
+            android:drawablePadding="@dimen/icon_padding"
+            android:drawableTint="@android:color/darker_gray"
+            android:hint="@string/hint_amount"
+            android:padding="@dimen/transaction_padding" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/txtPickDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableLeft="@drawable/time"
+            android:drawableStart="@drawable/time"
+            android:drawablePadding="@dimen/icon_padding"
+            android:drawableRight="@drawable/dial_pad"
+            android:drawableEnd="@drawable/dial_pad"
+            android:drawableTint="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/transaction_padding"
+            android:text="@string/hint_date"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableStart="@drawable/note"
+            android:drawableLeft="@drawable/note"
+            android:drawablePadding="@dimen/icon_padding"
+            android:drawableTint="@android:color/darker_gray"
+            android:gravity="top|left|start"
+            android:hint="@string/hint_notes"
+            android:lines="3"
+            android:maxLines="3"
+            android:padding="@dimen/transaction_padding" />
+
+    </LinearLayout>
+</ScrollView>
