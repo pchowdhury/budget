@@ -9,11 +9,11 @@ import android.arch.persistence.room.Room
 class BudgetApp : Application() {
 
     companion object {
-        lateinit var db : BudgetDatabase
+        lateinit var database: BudgetDatabase
     }
 
     override fun onCreate() {
         super.onCreate()
-        db = Room.databaseBuilder(this, BudgetDatabase::class.java, "budget_db").build()
+        database = Room.databaseBuilder(this, BudgetDatabase::class.java, "budget_db").build()
     }
 }

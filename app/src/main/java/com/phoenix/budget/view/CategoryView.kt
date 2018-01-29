@@ -3,6 +3,8 @@ package com.phoenix.budget.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.graphics.Rect
+import android.os.Handler
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,6 +19,8 @@ import com.phoenix.budget.model.Category
 import com.phoenix.budget.persistence.BudgetApp
 import kotlinx.android.synthetic.main.category_view.view.*
 import java.sql.Date
+import android.support.annotation.DimenRes
+import android.support.annotation.NonNull
 
 
 /**
@@ -27,29 +31,36 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
     init {
         val view: View = View.inflate(context, R.layout.category_view, this)
         val recycleView = view.findViewById<RecyclerView>(R.id.recycleView)
-        recycleView.layoutManager = LinearLayoutManager(context)
+        recycleView.layoutManager = GridLayoutManager(context, 6)
+
+        val itemDecoration = ItemOffsetDecoration(context, R.dimen.category_item_margin)
+        recycleView.addItemDecoration(itemDecoration)
         recycleView.setHasFixedSize(true)
         loadCategories()
     }
 
     fun loadCategories() {
-        val list = BudgetApp.db.categoryDao().getAllCategory()
-        if(list.isEmpty()){
-            addCategories()
-        }
-        recycleView.adapter = CategoryAdapter(list)
+        val handler = Handler()
+        Thread({
+            val list = BudgetApp.database.categoryDao().getAllCategory()
+            if(list.isEmpty()){
+                addCategories()
+            }
+            handler.post { recycleView.adapter = CategoryAdapter(list) }
+        }).start()
+
     }
 
     private fun addCategories() {
         for(i in 0..7){
-            val item: Category = Category(i, i.toString(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
-            BudgetApp.db.categoryDao().insertTask(item)
+            val item = Category(i, i.toString(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
+            BudgetApp.database.categoryDao().insertTask(item)
         }
     }
 
 
     abstract class CategoryBaseAdapter : RecyclerView.Adapter<CategoryBaseAdapter.CategoryViewHolder>() {
-        class CategoryViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+        class CategoryViewHolder( binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
             // each data item is just a string in this case
             val imgView = binding.root.findViewById<ImageView>(R.id.imgView)
             val RESOURCE: MutableList<Int> = mutableListOf(
@@ -100,6 +111,17 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
 
         override fun getItemCount(): Int {
             return category.size
+        }
+    }
+
+     class ItemOffsetDecoration(private val mItemOffset: Int) : RecyclerView.ItemDecoration() {
+
+        constructor(@NonNull context: Context, @DimenRes itemOffsetId: Int) : this(context.resources.getDimensionPixelSize(itemOffsetId)) {}
+
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
+                           state: RecyclerView.State) {
+            super.getItemOffsets(outRect, view, parent, state)
+            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset)
         }
     }
 

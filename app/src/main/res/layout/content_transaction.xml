@@ -89,9 +89,7 @@
         <com.phoenix.budget.view.CategoryView
             android:id="@+id/categoryView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/border_width"
+            android:layout_height="wrap_content"
             android:background="@color/color_border" />
-
-
     </LinearLayout>
 </ScrollView>
