@@ -10,7 +10,7 @@ import com.phoenix.budget.model.Category
 @Dao
 interface CategoryDao {
 
-    @Query("SELECT * FROM category")
+    @Query("SELECT * FROM category ORDER BY category_id")
     fun getAllCategory(): List<Category>
 
     @Query("SELECT * FROM category where category_id = :category_id")
@@ -24,4 +24,7 @@ interface CategoryDao {
 
     @Delete
     fun deleteCategory(category: Category)
+
+    @Query("DELETE FROM category")
+    fun deleteAllCategories()
 }

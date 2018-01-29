@@ -96,4 +96,23 @@
     <string name="hint_date">Date</string>
     <string name="hint_notes">Notes</string>
     <string name="hint_category">Notes</string>
+
+    <string-array name="category_items">
+        <item>EMI</item>
+        <item>Grossery</item>
+        <item>FUEL</item>
+        <item>Shopping</item>
+        <item>Medical</item>
+        <item>Entertainment</item>
+        <item>Bill</item>
+        <item>Food &amp; Drinks</item>
+        <item>Travel</item>
+        <item>Toys</item>
+        <item>Education</item>
+        <item>Gifts</item>
+        <item>Investment</item>
+        <item>Transfer</item>
+        <item>Maintainance</item>
+        <item>Add Category</item>
+    </string-array>
 </resources>
