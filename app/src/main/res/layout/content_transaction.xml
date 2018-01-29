@@ -9,8 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:background="@drawable/transaction_border_bg"
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatEditText
@@ -66,6 +64,16 @@
             android:layout_height="@dimen/border_width"
             android:background="@color/color_border" />
 
+        <com.phoenix.budget.view.CategoryView
+            android:id="@+id/categoryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_width"
+            android:background="@color/color_border" />
+
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/editNote"
             android:layout_width="match_parent"
@@ -80,16 +88,5 @@
             android:lines="3"
             android:maxLines="3"
             android:padding="@dimen/transaction_padding" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_width"
-            android:background="@color/color_border" />
-
-        <com.phoenix.budget.view.CategoryView
-            android:id="@+id/categoryView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_border" />
     </LinearLayout>
 </ScrollView>

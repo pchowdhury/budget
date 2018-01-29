@@ -3,10 +3,9 @@ package com.phoenix.budget.view
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
-import android.graphics.Rect
+import android.graphics.Color
 import android.os.Handler
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -19,8 +18,6 @@ import com.phoenix.budget.model.Category
 import com.phoenix.budget.persistence.BudgetApp
 import kotlinx.android.synthetic.main.category_view.view.*
 import java.sql.Date
-import android.support.annotation.DimenRes
-import android.support.annotation.NonNull
 
 
 /**
@@ -31,10 +28,8 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
     init {
         val view: View = View.inflate(context, R.layout.category_view, this)
         val recycleView = view.findViewById<RecyclerView>(R.id.recycleView)
-        recycleView.layoutManager = GridLayoutManager(context, 6)
+        recycleView.layoutManager = GridLayoutManager(context, 5)
 
-        val itemDecoration = ItemOffsetDecoration(context, R.dimen.category_item_margin)
-        recycleView.addItemDecoration(itemDecoration)
         recycleView.setHasFixedSize(true)
         loadCategories()
     }
@@ -74,8 +69,10 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
                     R.drawable.time
             )
 
-            fun bind(category: Category) {
+            fun bind(category: Category, position: Int) {
+                imgView.setColorFilter(Color.WHITE)
                 imgView.setImageResource(RESOURCE[category.categoryId])
+                imgView.isSelected = position == 1
             }
         }
 
@@ -89,7 +86,7 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
 
         // Replace the contents of a view (invoked by the layout manager)
         override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-            holder.bind(getDataAtPosition(position))
+            holder.bind(getDataAtPosition(position), position)
         }
 
 
@@ -113,17 +110,4 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
             return category.size
         }
     }
-
-     class ItemOffsetDecoration(private val mItemOffset: Int) : RecyclerView.ItemDecoration() {
-
-        constructor(@NonNull context: Context, @DimenRes itemOffsetId: Int) : this(context.resources.getDimensionPixelSize(itemOffsetId)) {}
-
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                           state: RecyclerView.State) {
-            super.getItemOffsets(outRect, view, parent, state)
-            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset)
-        }
-    }
-
-
 }
