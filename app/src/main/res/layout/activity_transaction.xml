@@ -5,7 +5,6 @@
     tools:context="com.phoenix.budget.DashboardActivity">
 
     <data>
-
         <variable
             name="presenter"
             type="com.phoenix.budget.persenter.TransactionPresenter" />

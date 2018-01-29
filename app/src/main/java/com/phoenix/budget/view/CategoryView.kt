@@ -29,79 +29,79 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
         val recycleView = view.findViewById<RecyclerView>(R.id.recycleView)
         recycleView.layoutManager = LinearLayoutManager(context)
         recycleView.setHasFixedSize(true)
-//        loadCategories()
+        loadCategories()
     }
 
-//    fun loadCategories() {
-//        val list = BudgetApp.db.categoryDao().getAllCategory()
-//        if(list.isEmpty()){
-//            addCategories()
-//        }
-//        recycleView.adapter = CategoryAdapter(list)
-//    }
-//
-//    private fun addCategories() {
-//        for(i in 0..7){
-//            val item: Category = Category(i, i.toString(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
-//            BudgetApp.db.categoryDao().insertTask(item)
-//        }
-//    }
-//
-//
-//    abstract class CategoryBaseAdapter : RecyclerView.Adapter<CategoryBaseAdapter.CategoryViewHolder>() {
-//        class CategoryViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-//            // each data item is just a string in this case
-//            val imgView = binding.root.findViewById<ImageView>(R.id.imgView)
-//            val RESOURCE: MutableList<Int> = mutableListOf(
-//                    R.drawable.add_items,
-//                    R.drawable.check_ok,
-//                    R.drawable.dial_pad,
-//                    R.drawable.dollar,
-//                    R.drawable.new_entry,
-//                    R.drawable.note,
-//                    R.drawable.right_cheveron,
-//                    R.drawable.time
-//            )
-//
-//            fun bind(category: Category) {
-//                imgView.setImageResource(RESOURCE[category.categoryId])
-//            }
-//        }
-//
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-//            // create a new view
-//            val layoutInflater = LayoutInflater.from(parent.context)
-//            val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, getLayoutIdForType(viewType), parent, false)
-//            // set the view's size, margins, paddings and layout parameters
-//            return CategoryViewHolder(binding)
-//        }
-//
-//        // Replace the contents of a view (invoked by the layout manager)
-//        override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-//            holder.bind(getDataAtPosition(position))
-//        }
-//
-//
-//        abstract fun getDataAtPosition(position: Int): Category
-//
-//        abstract fun getLayoutIdForType(viewType: Int): Int
-//
-//    }
-//
-//
-//    class CategoryAdapter(val category: List<Category>) : CategoryBaseAdapter() {
-//        override fun getDataAtPosition(position: Int): Category {
-//            return category[position]
-//        }
-//
-//        override fun getLayoutIdForType(viewType: Int): Int {
-//            return R.layout.category_item
-//        }
-//
-//        override fun getItemCount(): Int {
-//            return category.size
-//        }
-//    }
+    fun loadCategories() {
+        val list = BudgetApp.db.categoryDao().getAllCategory()
+        if(list.isEmpty()){
+            addCategories()
+        }
+        recycleView.adapter = CategoryAdapter(list)
+    }
+
+    private fun addCategories() {
+        for(i in 0..7){
+            val item: Category = Category(i, i.toString(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
+            BudgetApp.db.categoryDao().insertTask(item)
+        }
+    }
+
+
+    abstract class CategoryBaseAdapter : RecyclerView.Adapter<CategoryBaseAdapter.CategoryViewHolder>() {
+        class CategoryViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+            // each data item is just a string in this case
+            val imgView = binding.root.findViewById<ImageView>(R.id.imgView)
+            val RESOURCE: MutableList<Int> = mutableListOf(
+                    R.drawable.add_items,
+                    R.drawable.check_ok,
+                    R.drawable.dial_pad,
+                    R.drawable.dollar,
+                    R.drawable.new_entry,
+                    R.drawable.note,
+                    R.drawable.right_cheveron,
+                    R.drawable.time
+            )
+
+            fun bind(category: Category) {
+                imgView.setImageResource(RESOURCE[category.categoryId])
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+            // create a new view
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, getLayoutIdForType(viewType), parent, false)
+            // set the view's size, margins, paddings and layout parameters
+            return CategoryViewHolder(binding)
+        }
+
+        // Replace the contents of a view (invoked by the layout manager)
+        override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+            holder.bind(getDataAtPosition(position))
+        }
+
+
+        abstract fun getDataAtPosition(position: Int): Category
+
+        abstract fun getLayoutIdForType(viewType: Int): Int
+
+    }
+
+
+    class CategoryAdapter(val category: List<Category>) : CategoryBaseAdapter() {
+        override fun getDataAtPosition(position: Int): Category {
+            return category[position]
+        }
+
+        override fun getLayoutIdForType(viewType: Int): Int {
+            return R.layout.category_item
+        }
+
+        override fun getItemCount(): Int {
+            return category.size
+        }
+    }
 
 
 }

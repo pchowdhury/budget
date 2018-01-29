@@ -7,8 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    kapt { generateStubs = true }
     compileSdkVersion 26
-    dataBinding.enabled true
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.phoenix.budget"
         minSdkVersion 16
@@ -32,10 +35,9 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
+    kapt 'com.android.databinding:compiler:2.3.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    kapt "com.android.databinding:compiler:3.1.0-alpha09"
-    kapt "com.android.databinding:compiler:3.1.0-alpha09"
     implementation "android.arch.persistence.room:runtime:1.1.0-alpha1"
 }
