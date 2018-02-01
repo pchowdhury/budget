@@ -8,7 +8,7 @@
             type="com.phoenix.budget.presenter.TransactionPresenter" />
         <variable
             name="transaction"
-            type="com.phoenix.budget.model.Transaction" />
+            type="com.phoenix.budget.model.Record" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

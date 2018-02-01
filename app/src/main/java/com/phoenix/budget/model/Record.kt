@@ -1,28 +1,28 @@
 package com.phoenix.budget.model
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 /**
  * Created by Pushpan on 01/02/18.
  */
-@Entity(tableName = "transaction")
-class Transaction() {
-    @ColumnInfo(name = "iid")
+@Entity(tableName = "records")
+class Record() {
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
     @ColumnInfo(name = "user_d")
-    var userId: String = "00"
+    var userId: String = ""
 
     @ColumnInfo(name = "title")
     var title: String = ""
 
     @ColumnInfo(name = "category_id")
     var categoryId: Int = 0
-
-//    @Ignore
-//    var category = Category()
 
     @ColumnInfo(name = "amount")
     var amount: Double = Double.MIN_VALUE
@@ -50,11 +50,10 @@ class Transaction() {
         this.note = note
         this.createdOn = createdOn
         this.updatedOn = updatedOn
-//        this.category.categoryId = categoryId
     }
 
     @Ignore
-    constructor(userId: String, isIncome: Boolean): this(){
+    constructor(userId: String, isIncome: Boolean):this(){
         this.userId = userId
         this.isIncome = isIncome
     }

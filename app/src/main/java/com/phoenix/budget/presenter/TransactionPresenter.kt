@@ -1,7 +1,7 @@
 package com.phoenix.budget.presenter
 
 import com.phoenix.budget.TransactionCallback
-import com.phoenix.budget.model.Transaction
+import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -13,15 +13,15 @@ import io.reactivex.schedulers.Schedulers
  */
 class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     var transactionCallback: TransactionCallback = thisTransactionCallback
-    lateinit var transaction: Transaction
-    fun getTitle(): String? = transaction.title
-    fun getAmount(): String? = transaction.amount.toString()
-    fun getTransactionDate(): String? = transaction.createdOn.toString()
-    fun getNote(): String? = transaction.note
+    lateinit var record: Record
+    fun getTitle(): String? = record.title
+    fun getAmount(): String? = record.amount.toString()
+    fun getTransactionDate(): String? = record.createdOn.toString()
+    fun getNote(): String? = record.note
     val compositeDisposable = CompositeDisposable()
 
     fun setTransaction(transactionId: String, isIncome: Boolean) {
-      if(transactionId.isBlank()){
+      if(transactionId.isEmpty()){
           openNewTransaction(isIncome)
       }else{
         compositeDisposable.add(getTrasactionDisposable(transactionId, isIncome))
@@ -29,19 +29,19 @@ class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     }
 
     private fun openNewTransaction(isIncome: Boolean) {
-        loadTransaction(Transaction("0", isIncome))
+        loadTransaction(Record("0", isIncome))
     }
 
     fun getTrasactionDisposable(transactionId: String, isIncome: Boolean): Disposable {
-       return  BudgetApp.database.transactionDao().findTransactionById(transactionId)
+       return  BudgetApp.database.RecordsDao().findRecordById(transactionId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({t -> loadTransaction(t)},{ error -> showError()})
     }
 
-    private fun loadTransaction(t: Transaction) {
-        transaction = t
-        transactionCallback.onBindTransaction(transaction)
+    private fun loadTransaction(t: Record) {
+        record = t
+        transactionCallback.onBindTransaction(record)
     }
 
     private fun showError(){

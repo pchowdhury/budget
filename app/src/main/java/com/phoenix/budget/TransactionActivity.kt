@@ -11,7 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
-import com.phoenix.budget.model.Transaction
+import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.TransactionPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
@@ -29,7 +29,9 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         presenter = TransactionPresenter(this)
         binding.presenter = presenter
         setUpUI()
-        presenter.setTransaction(intent.getStringExtra(TRANSACTION_ID), intent.getBooleanExtra(IS_INCOME, false))
+        var id = intent.getStringExtra(TRANSACTION_ID)
+        if (id == null) id = ""
+        presenter.setTransaction(id, intent.getBooleanExtra(IS_INCOME, false))
     }
 
     private fun setUpUI() {
@@ -87,8 +89,8 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBindTransaction(transaction: Transaction) {
-      binding.transaction = transaction
+    override fun onBindTransaction(Record: Record) {
+      binding.transaction = Record
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
