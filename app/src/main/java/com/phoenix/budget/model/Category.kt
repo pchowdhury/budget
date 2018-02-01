@@ -19,6 +19,9 @@ class Category() {
     @ColumnInfo(name = "title")
     var title: String = ""
 
+    @ColumnInfo(name = "is_custom")
+    var isCustom: Boolean = false
+
     @ColumnInfo(name = "created_on")
     var createdOn: Date = Date(System.currentTimeMillis())
 
@@ -26,18 +29,14 @@ class Category() {
     var updatedOn: Date = Date(System.currentTimeMillis())
 
     @Ignore
-    constructor(categoryId: Int, title: String, createdOn: Date, updatedOn: Date) : this() {
+    constructor(categoryId: Int, title: String, isCustom: Boolean,  createdOn: Date, updatedOn: Date) : this() {
         this.title = title
         this.categoryId = categoryId
+        this.isCustom = isCustom
         this.createdOn = createdOn
         this.updatedOn = updatedOn
     }
 
     @Ignore
-    constructor(title: String, createdOn: Date, updatedOn: Date) : this(0, title,  createdOn, updatedOn) {
-        this.title = title
-        this.categoryId = categoryId
-        this.createdOn = createdOn
-        this.updatedOn = updatedOn
-    }
+    constructor(title: String, isCustom: Boolean, createdOn: Date, updatedOn: Date) : this(0, title, isCustom, createdOn, updatedOn)
 }

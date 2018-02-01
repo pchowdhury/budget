@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="category_items">
+        <item>EMI</item>
+        <item>Grossery</item>
+        <item>FUEL</item>
+        <item>Shopping</item>
+        <item>Medical</item>
+        <item>Entertainment</item>
+        <item>Bill</item>
+        <item>Food &amp; Drinks</item>
+        <item>Travel</item>
+        <item>Toys</item>
+        <item>Education</item>
+        <item>Gifts</item>
+        <item>Investment</item>
+        <item>Transfer</item>
+        <item>Maintenance</item>
+        <item>Add Category</item>
+    </string-array>
+
+    <integer-array name="category_icons">
+        <item>@drawable/add_items</item>
+        <item>@drawable/check_ok</item>
+        <item>@drawable/dial_pad</item>
+        <item>@drawable/dollar</item>
+        <item>@drawable/new_entry</item>
+        <item>@drawable/note</item>
+        <item>@drawable/right_cheveron</item>
+        <item>@drawable/time</item>
+    </integer-array>
+</resources>

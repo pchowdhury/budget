@@ -4,20 +4,23 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.graphics.Color
-import android.os.Handler
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.phoenix.budget.BuildConfig
 import com.phoenix.budget.R
 import com.phoenix.budget.model.Category
 import com.phoenix.budget.persistence.BudgetApp
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.category_view.view.*
-import java.sql.Date
 
 
 /**
@@ -25,49 +28,55 @@ import java.sql.Date
  */
 class CategoryView @kotlin.jvm.JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
-    init {
-        val view: View = View.inflate(context, R.layout.category_view, this)
-        val recycleView = view.findViewById<RecyclerView>(R.id.recycleView)
-        recycleView.layoutManager = GridLayoutManager(context, 5)
+    val compositeDisposable = CompositeDisposable()
 
-        recycleView.setHasFixedSize(true)
+    init {
+        View.inflate(context, R.layout.category_view, this)
+        recycleView.layoutManager = GridLayoutManager(context, 5)
+        loadIcons()
         loadCategories()
     }
 
-    val RESOURCE: MutableList<Int> = mutableListOf(
-            R.drawable.add_items,
-            R.drawable.check_ok,
-            R.drawable.dial_pad,
-            R.drawable.dollar,
-            R.drawable.new_entry,
-            R.drawable.note,
-            R.drawable.right_cheveron,
-            R.drawable.time
-    )
+    val iconArr = loadIcons()
 
-    fun loadCategories() {
-        val handler = Handler()
-        Thread({
-//            BudgetApp.database.categoryDao().deleteAllCategories()
-            var list = BudgetApp.database.categoryDao().getAllCategory()
-            if (list.isEmpty()) {
-                addCategories()
-                 list = BudgetApp.database.categoryDao().getAllCategory()
-            }
-            handler.post { recycleView.adapter = CategoryAdapter(list) }
-        }).start()
-
+    private fun loadIcons(): IntArray {
+        val ar = context.resources.obtainTypedArray(R.array.category_icons)
+        val len = ar.length()
+        val resIds = IntArray(len)
+        for (i in 0 until len)
+            resIds[i] = ar.getResourceId(i, 0)
+        ar.recycle()
+        return resIds
     }
 
-    private fun addCategories() {
-        // FIXME category with 0 id doesn't get inserted for some reason
-        var categories = context.resources.getStringArray(R.array.category_items)
-        for (i in 0..(categories.size - 1)) {
-            val item = Category(i, categories[i], Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
-            BudgetApp.database.categoryDao().insertTask(item)
+    private fun loadCategories() {
+        compositeDisposable.add(getAllCategoryDisposable())
+    }
+
+    private fun getAllCategoryDisposable() = BudgetApp.database.categoryDao().getAllCategory()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list -> showData(list) }, { error -> showError(error) })
+
+    private fun showError(error: Throwable) {
+        txtError.visibility = View.VISIBLE
+        if (BuildConfig.DEBUG) {
+            Log.e(javaClass.name, error.localizedMessage)
         }
     }
 
+    private fun showData(list: List<Category>) {
+        recycleView.adapter = CategoryAdapter(list)
+    }
+
+    override fun onDetachedFromWindow() {
+        doCleanup()
+        super.onDetachedFromWindow()
+    }
+
+    private fun doCleanup() {
+        compositeDisposable.clear()
+    }
 
     inner abstract class CategoryBaseAdapter : RecyclerView.Adapter<CategoryBaseAdapter.CategoryViewHolder>() {
         inner class CategoryViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -76,7 +85,7 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
 
             fun bind(category: Category, position: Int) {
                 imgView.setColorFilter(Color.WHITE)
-                imgView.setImageResource(if (category.categoryId<RESOURCE.size) RESOURCE[category.categoryId] else RESOURCE[RESOURCE.size - 1])
+                imgView.setImageResource(if ((category.categoryId - 1) < iconArr.size) iconArr[(category.categoryId - 1)] else iconArr[iconArr.size - 1])
                 imgView.isSelected = position == 1
             }
         }
