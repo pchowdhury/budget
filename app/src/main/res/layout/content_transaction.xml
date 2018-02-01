@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/editName"
+            android:id="@+id/editTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
@@ -21,7 +21,8 @@
             android:drawableStart="@drawable/new_entry"
             android:drawableTint="@android:color/darker_gray"
             android:hint="@string/hint_label"
-            android:padding="@dimen/transaction_padding" />
+            android:padding="@dimen/transaction_padding"
+            android:text="@{presenter.getTitle}" />
 
         <View
             android:layout_width="match_parent"
@@ -37,7 +38,8 @@
             android:drawablePadding="@dimen/icon_padding"
             android:drawableTint="@android:color/darker_gray"
             android:hint="@string/hint_amount"
-            android:padding="@dimen/transaction_padding" />
+            android:padding="@dimen/transaction_padding"
+            android:text="@{presenter.getAmount}" />
 
         <View
             android:layout_width="match_parent"
@@ -57,7 +59,7 @@
             android:drawableTint="@android:color/darker_gray"
             android:gravity="center_vertical"
             android:padding="@dimen/transaction_padding"
-            android:text="@string/hint_date" />
+            android:text="@{presenter.transactionDate}" />
 
         <View
             android:layout_width="match_parent"
@@ -69,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_width"
@@ -87,6 +90,8 @@
             android:hint="@string/hint_notes"
             android:lines="3"
             android:maxLines="3"
-            android:padding="@dimen/transaction_padding" />
+            android:padding="@dimen/transaction_padding"
+            android:text="@{presenter.note}"
+            />
     </LinearLayout>
 </ScrollView>

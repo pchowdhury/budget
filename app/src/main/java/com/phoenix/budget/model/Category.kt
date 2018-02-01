@@ -28,6 +28,7 @@ class Category() {
     @ColumnInfo(name = "updated_on")
     var updatedOn: Date = Date(System.currentTimeMillis())
 
+    @Ignore
     constructor(categoryId: Int, title: String, isCustom: Boolean,  createdOn: Date, updatedOn: Date) : this() {
         this.title = title
         this.categoryId = categoryId

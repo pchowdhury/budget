@@ -11,7 +11,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
-import com.phoenix.budget.persenter.TransactionPresenter
+import com.phoenix.budget.model.Transaction
+import com.phoenix.budget.presenter.TransactionPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,18 +22,19 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     lateinit var presenter: TransactionPresenter
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
-    lateinit var menu:PopMenuItemType
+    lateinit var menu: PopMenuItemType
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_transaction)
-        menu = PopMenuItemType.values()[intent.getIntExtra(MODE, 0)]
-        configureToolBar()
         presenter = TransactionPresenter(this)
         binding.presenter = presenter
         setUpUI()
+        presenter.setTransaction(intent.getStringExtra(TRANSACTION_ID), intent.getBooleanExtra(IS_INCOME, false))
     }
 
     private fun setUpUI() {
+        menu = PopMenuItemType.values()[intent.getIntExtra(MODE, 0)]
+        configureToolBar()
         pickDate.setOnClickListener({onSelectDate()})
     }
 
@@ -85,6 +87,10 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onBindTransaction(transaction: Transaction) {
+      binding.transaction = transaction
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_transaction, menu)
@@ -108,5 +114,7 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     companion object {
         @JvmStatic
         val MODE: String = "MODE"
+        val TRANSACTION_ID: String = "TRANSACTION_ID"
+        val IS_INCOME: String = "IS_INCOME"
     }
 }

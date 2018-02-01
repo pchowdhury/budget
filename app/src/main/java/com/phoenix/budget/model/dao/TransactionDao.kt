@@ -2,8 +2,7 @@ package com.phoenix.budget.model.dao
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import com.phoenix.budget.model.Trasaction
-import com.phoenix.budget.model.Category
+import com.phoenix.budget.model.Transaction
 import io.reactivex.Flowable
 
 /**
@@ -11,20 +10,21 @@ import io.reactivex.Flowable
  */
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM transaction ORDER BY id")
-    fun getAllTransactions(): Flowable<List<Trasaction>>
+    @Query("SELECT * FROM transaction ORDER BY iid")
+    fun getAllTransactions(): Flowable<List<Transaction>>
 
+//    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
     @Query("SELECT * FROM transaction where id = :id")
-    fun findTransactionById(id: Int): Flowable<Trasaction>
+    fun findTransactionById(id: String): Flowable<Transaction>
 
     @Insert(onConflict = REPLACE)
-    fun insertTransaction(transaction: Trasaction)
+    fun insertTransaction(transaction: Transaction)
 
     @Update(onConflict = REPLACE)
-    fun updateTransaction(transaction: Trasaction)
+    fun updateTransaction(transaction: Transaction)
 
     @Delete
-    fun deleteTransaction(transaction: Trasaction)
+    fun deleteTransaction(transaction: Transaction)
 
     @Query("DELETE FROM category")
     fun deleteAllTransaction()

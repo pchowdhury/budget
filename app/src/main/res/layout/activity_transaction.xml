@@ -5,7 +5,10 @@
     <data>
         <variable
             name="presenter"
-            type="com.phoenix.budget.persenter.TransactionPresenter" />
+            type="com.phoenix.budget.presenter.TransactionPresenter" />
+        <variable
+            name="transaction"
+            type="com.phoenix.budget.model.Transaction" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

@@ -11,7 +11,7 @@ import com.phoenix.budget.databinding.ActivityDashboardBinding
 import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
-import com.phoenix.budget.persenter.DashboardPresenter
+import com.phoenix.budget.presenter.DashboardPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {

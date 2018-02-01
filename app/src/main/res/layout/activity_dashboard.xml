@@ -7,7 +7,7 @@
     <data>
         <variable
             name="presenter"
-            type="com.phoenix.budget.persenter.DashboardPresenter" />
+            type="com.phoenix.budget.presenter.DashboardPresenter" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
