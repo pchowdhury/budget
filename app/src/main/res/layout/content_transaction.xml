@@ -22,7 +22,7 @@
             android:drawableTint="@android:color/darker_gray"
             android:hint="@string/hint_label"
             android:padding="@dimen/transaction_padding"
-            android:text="@{presenter.getTitle}" />
+            android:text="@{record.title}" />
 
         <View
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:drawableTint="@android:color/darker_gray"
             android:hint="@string/hint_amount"
             android:padding="@dimen/transaction_padding"
-            android:text="@{presenter.getAmount}" />
+            android:text="@{record.amount}" />
 
         <View
             android:layout_width="match_parent"

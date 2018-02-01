@@ -14,37 +14,37 @@ import io.reactivex.schedulers.Schedulers
 class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     var transactionCallback: TransactionCallback = thisTransactionCallback
     lateinit var record: Record
-    fun getTitle(): String? = record.title
-    fun getAmount(): String? = record.amount.toString()
-    fun getTransactionDate(): String? = record.createdOn.toString()
-    fun getNote(): String? = record.note
     val compositeDisposable = CompositeDisposable()
 
-    fun setTransaction(transactionId: String, isIncome: Boolean) {
-      if(transactionId.isEmpty()){
-          openNewTransaction(isIncome)
+    fun setRecord(recordId: String, isIncome: Boolean) {
+      if(recordId.isEmpty()){
+          openNewRecord(isIncome)
       }else{
-        compositeDisposable.add(getTrasactionDisposable(transactionId, isIncome))
+        compositeDisposable.add(getTrasactionDisposable(recordId, isIncome))
       }
     }
 
-    private fun openNewTransaction(isIncome: Boolean) {
-        loadTransaction(Record("0", isIncome))
+    private fun openNewRecord(isIncome: Boolean) {
+        loadRecord(Record("0", isIncome))
     }
 
     fun getTrasactionDisposable(transactionId: String, isIncome: Boolean): Disposable {
        return  BudgetApp.database.RecordsDao().findRecordById(transactionId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({t -> loadTransaction(t)},{ error -> showError()})
+                .subscribe ({t -> loadRecord(t)},{ error -> showError()})
     }
 
-    private fun loadTransaction(t: Record) {
+    private fun loadRecord(t: Record) {
         record = t
-        transactionCallback.onBindTransaction(record)
+        transactionCallback.onBindRecord(record)
     }
 
     private fun showError(){
-        openNewTransaction(false)
+        openNewRecord(false)
+    }
+
+    fun cleanUp(){
+        compositeDisposable.clear()
     }
 }

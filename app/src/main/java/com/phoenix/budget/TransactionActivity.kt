@@ -23,15 +23,14 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
     lateinit var menu: PopMenuItemType
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_transaction)
         presenter = TransactionPresenter(this)
         binding.presenter = presenter
         setUpUI()
-        var id = intent.getStringExtra(TRANSACTION_ID)
-        if (id == null) id = ""
-        presenter.setTransaction(id, intent.getBooleanExtra(IS_INCOME, false))
+        presenter.setRecord(intent.getStringExtra(RECORD_ID), intent.getBooleanExtra(IS_INCOME, false))
     }
 
     private fun setUpUI() {
@@ -89,8 +88,14 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBindTransaction(Record: Record) {
-      binding.transaction = Record
+    override fun onBindRecord(record: Record) {
+        binding.record = record
+        binding.executePendingBindings()
+    }
+
+    override fun onDestroy() {
+        presenter.cleanUp()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -116,7 +121,9 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     companion object {
         @JvmStatic
         val MODE: String = "MODE"
-        val TRANSACTION_ID: String = "TRANSACTION_ID"
+        @JvmStatic
+        val RECORD_ID: String = "RECORD_ID"
+        @JvmStatic
         val IS_INCOME: String = "IS_INCOME"
     }
 }

@@ -51,6 +51,7 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
      fun startTransaction(menuItem: PopMenuItemType){
         val intent = Intent(this, TransactionActivity::class.java)
          intent.putExtra(TransactionActivity.MODE, menuItem.ordinal)
+         intent.putExtra(TransactionActivity.RECORD_ID, "")
         startActivity(intent)
     }
 }

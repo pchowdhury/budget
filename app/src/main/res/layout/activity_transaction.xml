@@ -7,7 +7,7 @@
             name="presenter"
             type="com.phoenix.budget.presenter.TransactionPresenter" />
         <variable
-            name="transaction"
+            name="record"
             type="com.phoenix.budget.model.Record" />
     </data>
 
