@@ -2,6 +2,7 @@ package com.phoenix.budget.model.dao
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
+import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.model.Record
 import io.reactivex.Flowable
 
@@ -11,11 +12,17 @@ import io.reactivex.Flowable
 @Dao
 interface RecordsDao {
     @Query("SELECT * FROM records")
-    fun getAllRecords(): Flowable<List<Record>>
+    fun findAllRecords(): Flowable<List<Record>>
 
 //    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
     @Query("SELECT * FROM records where id = :id")
     fun findRecordById(id: String): Flowable<Record>
+
+    @Query("SELECT records.*, category.id as category_id, category.title as category_title, category.created_on as category_created_on, category.updated_on as category_updated_on FROM records LEFT JOIN category ON records.category_id = category.id")
+    fun findCategorizedRecords(): Flowable<CategorizedRecord>
+
+    @Query("SELECT records.*, category.id as category_id, category.title as category_title, category.created_on as category_created_on, category.updated_on as category_updated_on FROM records LEFT JOIN category ON records.category_id = category.id AND records.id = :id")
+    fun findCategorizedRecordById(id: String): Flowable<CategorizedRecord>
 
     @Insert(onConflict = REPLACE)
     fun insertRecord(record: Record)

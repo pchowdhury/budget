@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
+import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.TransactionPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -30,7 +31,7 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         presenter = TransactionPresenter(this)
         binding.presenter = presenter
         setUpUI()
-        presenter.setRecord(intent.getStringExtra(RECORD_ID), intent.getBooleanExtra(IS_INCOME, false))
+        presenter.setCategorizedRecord(intent.getStringExtra(RECORD_ID), intent.getBooleanExtra(IS_INCOME, false))
     }
 
     private fun setUpUI() {
@@ -88,8 +89,9 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBindRecord(record: Record) {
-        binding.record = record
+    override fun onBindRecord(categorizedRecord: CategorizedRecord) {
+        binding.categorizedRecord = categorizedRecord
+        binding.categoryView.setCategorizedReport(categorizedRecord)
         binding.executePendingBindings()
     }
 

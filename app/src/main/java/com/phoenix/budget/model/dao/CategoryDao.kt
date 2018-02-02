@@ -10,11 +10,11 @@ import io.reactivex.Flowable
  */
 @Dao
 interface CategoryDao {
-    @Query("SELECT * FROM category ORDER BY category_id")
+    @Query("SELECT * FROM category ORDER BY id")
     fun getAllCategory(): Flowable<List<Category>>
 
-    @Query("SELECT * FROM category where category_id = :category_id")
-    fun findCategoryByCategoryId(category_id: Int): Flowable<Category>
+    @Query("SELECT * FROM category where id = :id")
+    fun findCategoryByCategoryId(id: Int): Flowable<Category>
 
     @Insert(onConflict = REPLACE)
     fun insertTask(category: Category)

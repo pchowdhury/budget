@@ -1,9 +1,6 @@
 package com.phoenix.budget.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import java.util.*
 
 /**
@@ -12,9 +9,9 @@ import java.util.*
 
 @Entity(tableName = "category")
 class Category() {
-    @ColumnInfo(name = "category_id")
+    @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    var categoryId: Int = 0
+    var id: Int = 0
 
     @ColumnInfo(name = "title")
     var title: String = ""
@@ -29,9 +26,9 @@ class Category() {
     var updatedOn: Date = Date(System.currentTimeMillis())
 
     @Ignore
-    constructor(categoryId: Int, title: String, isCustom: Boolean,  createdOn: Date, updatedOn: Date) : this() {
+    constructor(id: Int, title: String, isCustom: Boolean,  createdOn: Date, updatedOn: Date) : this() {
         this.title = title
-        this.categoryId = categoryId
+        this.id = id
         this.isCustom = isCustom
         this.createdOn = createdOn
         this.updatedOn = updatedOn

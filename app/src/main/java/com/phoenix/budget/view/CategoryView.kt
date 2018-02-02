@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.phoenix.budget.BuildConfig
 import com.phoenix.budget.R
+import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.model.Category
 import com.phoenix.budget.persistence.BudgetApp
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,7 +39,6 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
     }
 
     val iconArr = loadIcons()
-
     private fun loadIcons(): IntArray {
         val ar = context.resources.obtainTypedArray(R.array.category_icons)
         val len = ar.length()
@@ -69,6 +69,12 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
         recycleView.adapter = CategoryAdapter(list)
     }
 
+    private var selectedCategorizedRecord: CategorizedRecord? = null
+
+    fun setCategorizedReport(categorizedRecord: CategorizedRecord){
+        this.selectedCategorizedRecord =  categorizedRecord
+    }
+
     override fun onDetachedFromWindow() {
         doCleanup()
         super.onDetachedFromWindow()
@@ -85,8 +91,14 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
 
             fun bind(category: Category, position: Int) {
                 imgView.setColorFilter(Color.WHITE)
-                imgView.setImageResource(if ((category.categoryId - 1) < iconArr.size) iconArr[(category.categoryId - 1)] else iconArr[iconArr.size - 1])
-                imgView.isSelected = position == 1
+                imgView.setOnClickListener(
+                        {
+                            val deselecting = selectedCategorizedRecord?.categoryId == position
+                            selectedCategorizedRecord?.categoryId = if (deselecting) -1 else position
+                            notifyDataSetChanged()
+                        })
+                imgView.setImageResource(if ((category.id - 1) < iconArr.size) iconArr[(category.id - 1)] else iconArr[iconArr.size - 1])
+                imgView.isSelected = position == selectedCategorizedRecord?.categoryId
             }
         }
 

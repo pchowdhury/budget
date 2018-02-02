@@ -1,19 +1,16 @@
 package com.phoenix.budget.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import java.util.*
 
 /**
  * Created by Pushpan on 01/02/18.
  */
 @Entity(tableName = "records")
-class Record() {
+open class Record() {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 
     @ColumnInfo(name = "user_d")
     var userId: String = ""
@@ -40,7 +37,7 @@ class Record() {
     var updatedOn: Date = Date(System.currentTimeMillis())
 
     @Ignore
-    constructor(id: Int, userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
+    constructor(id: Long, userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
         this.id = id
         this.title = title
         this.userId = userId

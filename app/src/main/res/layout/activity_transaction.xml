@@ -11,8 +11,8 @@
             type="com.phoenix.budget.presenter.TransactionPresenter" />
 
         <variable
-            name="record"
-            type="com.phoenix.budget.model.Record" />
+            name="categorizedRecord"
+            type="com.phoenix.budget.model.CategorizedRecord" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -56,7 +56,7 @@
                     android:drawableTint="@android:color/darker_gray"
                     android:hint="@string/hint_label"
                     android:padding="@dimen/transaction_padding"
-                    android:text="@{record.title}" />
+                    android:text="@{categorizedRecord.title}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -73,7 +73,7 @@
                     android:drawableTint="@android:color/darker_gray"
                     android:hint="@string/hint_amount"
                     android:padding="@dimen/transaction_padding"
-                    android:text="@{record.title}" />
+                    android:text="@{categorizedRecord.title}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     android:drawableTint="@android:color/darker_gray"
                     android:gravity="center_vertical"
                     android:padding="@dimen/transaction_padding"
-                    android:text="@{record.title}" />
+                    android:text="@{categorizedRecord.title}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                     android:lines="3"
                     android:maxLines="3"
                     android:padding="@dimen/transaction_padding"
-                    android:text="@{record.note}" />
+                    android:text="@{categorizedRecord.note}" />
             </LinearLayout>
         </ScrollView>
 

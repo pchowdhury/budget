@@ -1,6 +1,7 @@
 package com.phoenix.budget.presenter
 
 import com.phoenix.budget.TransactionCallback
+import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,31 +14,31 @@ import io.reactivex.schedulers.Schedulers
  */
 class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     var transactionCallback: TransactionCallback = thisTransactionCallback
-    lateinit var record: Record
+    lateinit var categorizedRecord: CategorizedRecord
     val compositeDisposable = CompositeDisposable()
 
-    fun setRecord(recordId: String, isIncome: Boolean) {
+    fun setCategorizedRecord(recordId: String, isIncome: Boolean) {
       if(recordId.isEmpty()){
           openNewRecord(isIncome)
       }else{
-        compositeDisposable.add(getTrasactionDisposable(recordId, isIncome))
+        compositeDisposable.add(getCategorizedRecordDisposable(recordId, isIncome))
       }
     }
 
     private fun openNewRecord(isIncome: Boolean) {
-        loadRecord(Record("0", isIncome))
+        loadCategorizedRecord(CategorizedRecord("0", isIncome))
     }
 
-    fun getTrasactionDisposable(transactionId: String, isIncome: Boolean): Disposable {
-       return  BudgetApp.database.RecordsDao().findRecordById(transactionId)
+    fun getCategorizedRecordDisposable(recordId: String, isIncome: Boolean): Disposable {
+       return  BudgetApp.database.RecordsDao().findCategorizedRecordById(recordId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({t -> loadRecord(t)},{ error -> showError()})
+                .subscribe ({t -> loadCategorizedRecord(t)},{ error -> showError()})
     }
 
-    private fun loadRecord(t: Record) {
-        record = t
-        transactionCallback.onBindRecord(record)
+    private fun loadCategorizedRecord(t: CategorizedRecord) {
+        categorizedRecord = t
+        transactionCallback.onBindRecord(categorizedRecord)
     }
 
     private fun showError(){
