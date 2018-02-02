@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.phoenix.budget.DashboardActivity">
+
     <data>
+
         <variable
             name="presenter"
             type="com.phoenix.budget.presenter.TransactionPresenter" />
+
         <variable
             name="record"
             type="com.phoenix.budget.model.Record" />
@@ -30,12 +34,100 @@
                 />
         </android.support.design.widget.AppBarLayout>
 
-        <include
+        <ScrollView
             android:id="@+id/scrollview"
-            layout="@layout/content_transaction"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/new_entry"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:drawableStart="@drawable/new_entry"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:hint="@string/hint_label"
+                    android:padding="@dimen/transaction_padding"
+                    android:text="@{record.title}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/border_width"
+                    android:background="@color/color_border" />
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/dollar"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:hint="@string/hint_amount"
+                    android:padding="@dimen/transaction_padding"
+                    android:text="@{record.title}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/border_width"
+                    android:background="@color/color_border" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txtPickDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/dial_pad"
+                    android:drawableLeft="@drawable/time"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:drawableRight="@drawable/dial_pad"
+                    android:drawableStart="@drawable/time"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/transaction_padding"
+                    android:text="@{record.title}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/border_width"
+                    android:background="@color/color_border" />
+
+                <com.phoenix.budget.view.CategoryView
+                    android:id="@+id/categoryView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/border_width"
+                    android:background="@color/color_border" />
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/editNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/note"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:drawableStart="@drawable/note"
+                    android:drawableTint="@android:color/darker_gray"
+                    android:gravity="top|left|start"
+                    android:hint="@string/hint_notes"
+                    android:lines="3"
+                    android:maxLines="3"
+                    android:padding="@dimen/transaction_padding"
+                    android:text="@{record.note}" />
+            </LinearLayout>
+        </ScrollView>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
