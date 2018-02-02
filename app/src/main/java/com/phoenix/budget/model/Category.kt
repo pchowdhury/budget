@@ -11,7 +11,7 @@ import java.util.*
 class Category() {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Int = -1
 
     @ColumnInfo(name = "title")
     var title: String = ""
@@ -35,5 +35,5 @@ class Category() {
     }
 
     @Ignore
-    constructor(title: String, isCustom: Boolean, createdOn: Date, updatedOn: Date) : this(0, title, isCustom, createdOn, updatedOn)
+    constructor(title: String, isCustom: Boolean, createdOn: Date, updatedOn: Date) : this(-1, title, isCustom, createdOn, updatedOn)
 }

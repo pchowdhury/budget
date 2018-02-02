@@ -26,7 +26,7 @@ class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     }
 
     private fun openNewRecord(isIncome: Boolean) {
-        loadCategorizedRecord(CategorizedRecord("0", isIncome))
+        loadCategorizedRecord(CategorizedRecord("email", isIncome))
     }
 
     fun getCategorizedRecordDisposable(recordId: String, isIncome: Boolean): Disposable {

@@ -19,7 +19,7 @@ open class Record() {
     var title: String = ""
 
     @ColumnInfo(name = "category_id")
-    var categoryId: Int = 0
+    var categoryId: Int = -1
 
     @ColumnInfo(name = "amount")
     var amount: Double = Double.MIN_VALUE
@@ -36,22 +36,22 @@ open class Record() {
     @ColumnInfo(name = "updated_on")
     var updatedOn: Date = Date(System.currentTimeMillis())
 
-    @Ignore
-    constructor(id: Long, userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
-        this.id = id
-        this.title = title
-        this.userId = userId
-        this.categoryId = categoryId
-        this.amount = amount
-        this.isIncome = isIncome
-        this.note = note
-        this.createdOn = createdOn
-        this.updatedOn = updatedOn
-    }
-
-    @Ignore
-    constructor(userId: String, isIncome: Boolean):this(){
-        this.userId = userId
-        this.isIncome = isIncome
-    }
+//    @Ignore
+//    constructor(id: Long, userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
+//        this.id = id
+//        this.title = title
+//        this.userId = userId
+//        this.categoryId = categoryId
+//        this.amount = amount
+//        this.isIncome = isIncome
+//        this.note = note
+//        this.createdOn = createdOn
+//        this.updatedOn = updatedOn
+//    }
+//
+//    @Ignore
+//    constructor(userId: String, isIncome: Boolean):this(){
+//        this.userId = userId
+//        this.isIncome = isIncome
+//    }
 }

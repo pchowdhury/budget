@@ -12,7 +12,6 @@ import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
-import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.TransactionPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
