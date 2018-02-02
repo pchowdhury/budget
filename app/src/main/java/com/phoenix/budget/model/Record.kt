@@ -12,7 +12,7 @@ open class Record() {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
-    @ColumnInfo(name = "user_d")
+    @ColumnInfo(name = "user_id")
     var userId: String = ""
 
     @ColumnInfo(name = "title")
@@ -48,6 +48,18 @@ open class Record() {
 //        this.createdOn = createdOn
 //        this.updatedOn = updatedOn
 //    }
+    @Ignore
+    constructor(userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
+        this.id = id
+        this.title = title
+        this.userId = userId
+        this.categoryId = categoryId
+        this.amount = amount
+        this.isIncome = isIncome
+        this.note = note
+        this.createdOn = createdOn
+        this.updatedOn = updatedOn
+    }
 //
 //    @Ignore
 //    constructor(userId: String, isIncome: Boolean):this(){

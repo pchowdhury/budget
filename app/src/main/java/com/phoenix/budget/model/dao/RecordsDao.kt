@@ -11,6 +11,7 @@ import io.reactivex.Flowable
  */
 @Dao
 interface RecordsDao {
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records")
     fun findAllRecords(): Flowable<List<Record>>
 
@@ -25,13 +26,13 @@ interface RecordsDao {
     fun findCategorizedRecordById(id: String): Flowable<CategorizedRecord>
 
     @Insert(onConflict = REPLACE)
-    fun insertRecord(record: Record)
+    fun insertRecord(record: Record) : Long
 
     @Update(onConflict = REPLACE)
-    fun updateRecord(record: Record)
+    fun updateRecord(record: Record): Int
 
     @Delete
-    fun deleteRecord(record: Record)
+    fun deleteRecord(record: Record): Int
 
     @Query("DELETE FROM records")
     fun deleteAllRecords()

@@ -7,4 +7,6 @@ import com.phoenix.budget.model.CategorizedRecord
  */
 interface TransactionCallback : ErrorCallback {
     fun onBindRecord(categorizedRecord: CategorizedRecord)
+    fun closeRecord()
+    fun addAnotherRecord()
 }

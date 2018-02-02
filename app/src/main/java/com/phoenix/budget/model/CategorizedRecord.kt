@@ -8,7 +8,9 @@ import java.util.*
  */
 class CategorizedRecord: Record{
 
-    var categoryTitle: Boolean = false
+    var categoryTitle: String = ""
+
+    var isCustom: Boolean = false
 
     var categoryCreatedOn: Date = Date(System.currentTimeMillis())
 
@@ -19,5 +21,13 @@ class CategorizedRecord: Record{
     constructor(userId: String, isIncome: Boolean){
         this.userId = userId
         this.isIncome = isIncome
+    }
+
+    fun getCategory(): Category {
+        return Category(categoryId, categoryTitle, isCustom, categoryCreatedOn, categoryUpdatedOn)
+    }
+
+    fun getRecord(): Record{
+        return Record(userId, title, categoryId, amount, isIncome, note, createdOn, updatedOn)
     }
 }

@@ -17,13 +17,13 @@ interface CategoryDao {
     fun findCategoryByCategoryId(id: Int): Flowable<Category>
 
     @Insert(onConflict = REPLACE)
-    fun insertTask(category: Category)
+    fun insertTask(category: Category) : Long
 
     @Update(onConflict = REPLACE)
-    fun updateCategory(category: Category)
+    fun updateCategory(category: Category) : Int
 
     @Delete
-    fun deleteCategory(category: Category)
+    fun deleteCategory(category: Category) : Int
 
     @Query("DELETE FROM category")
     fun deleteAllCategories()

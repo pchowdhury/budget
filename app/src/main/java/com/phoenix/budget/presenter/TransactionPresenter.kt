@@ -4,10 +4,16 @@ import com.phoenix.budget.TransactionCallback
 import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.SingleEmitter
+
+
 
 /**
  * Created by Pushpan on 26/01/18.
@@ -48,4 +54,48 @@ class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     fun cleanUp(){
         compositeDisposable.clear()
     }
+
+    fun save() {
+        compositeDisposable.add(getInsertRecordDisposable())
+    }
+
+    fun getInsertRecordDisposable(): Disposable {
+       return Single.create(SingleOnSubscribe<Long> { emitter ->
+            try {
+                val ids = BudgetApp.database.RecordsDao().insertRecord(categorizedRecord.getRecord())
+                emitter.onSuccess(ids)
+            } catch (t: Throwable) {
+                emitter.onError(t)
+            }
+            }).observeOn(AndroidSchedulers.mainThread())
+              .subscribeOn(Schedulers.io())
+              .subscribeWith(object : DisposableSingleObserver<Long>() {
+                    override fun onSuccess(ids: Long) {
+                        transactionCallback.closeRecord()
+                    }
+                    override fun onError(e: Throwable) {
+                        showError()
+                    }
+                })
+    }
+
+//    fun getInsertCategoryDisposable(recordId: String, isIncome: Boolean): Disposable {
+//        return Single.create(SingleOnSubscribe<Int> { emitter ->
+//            try {
+//                val ids = BudgetApp.database.RecordsDao().insertRecord(categorizedRecord.getRecord())
+//                emitter.onSuccess(ids)
+//            } catch (t: Throwable) {
+//                emitter.onError(t)
+//            }
+//        }).observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribeWith(object : DisposableSingleObserver<Int>() {
+//                    override fun onSuccess(ids: Int) {
+//
+//                    }
+//                    override fun onError(e: Throwable) {
+//                        showError()
+//                    }
+//                })
+//    }
 }

@@ -94,6 +94,14 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         binding.executePendingBindings()
     }
 
+    override fun closeRecord() {
+        finish()
+    }
+
+    override fun addAnotherRecord() {
+        presenter.setCategorizedRecord("", intent.getBooleanExtra(IS_INCOME, false))
+    }
+
     override fun onDestroy() {
         presenter.cleanUp()
         super.onDestroy()
@@ -108,6 +116,7 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_ok -> {
+                presenter.save()
                 finish()
                 return true
             }
