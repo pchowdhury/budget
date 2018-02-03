@@ -36,7 +36,7 @@ class BudgetApp : Application() {
     private fun addCategories() {
         val categories = applicationContext.resources.getStringArray(R.array.category_items)
         for (i in 1..(categories.size)) {
-            val item = Category(categories[i - 1], false, Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
+            val item = Category(i, categories[i-1], false, Date(System.currentTimeMillis()), Date(System.currentTimeMillis()))
             database.categoryDao().insertTask(item)
         }
     }

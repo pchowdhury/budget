@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatTextView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.jakewharton.rxbinding.widget.RxTextView
 import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
@@ -16,6 +17,7 @@ import com.phoenix.budget.presenter.TransactionPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class TransactionActivity : AppCompatActivity(), TransactionCallback {
     lateinit var binding: ActivityTransactionBinding
@@ -37,7 +39,18 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         menu = PopMenuItemType.values()[intent.getIntExtra(MODE, 0)]
         configureToolBar()
         pickDate.setOnClickListener({onSelectDate()})
+
+        RxTextView.afterTextChangeEvents(binding.editTitle)
+                .subscribe { text -> presenter.categorizedRecord.title = text.toString() }
+
+//        RxTextView.afterTextChangeEvents(binding.editAmount)
+//                .subscribe { text -> presenter.categorizedRecord.amount = text.toString().toDouble() }
+
+        RxTextView.afterTextChangeEvents(binding.editNote)
+                .subscribe { text -> presenter.categorizedRecord.note = text.toString() }
+
     }
+
 
     private fun onSelectDate() {
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -75,6 +88,7 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         val myFormat = "dd/MM/yyyy hh:mm" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         pickDate.text = sdf.format(cal.getTime())
+        presenter.categorizedRecord.createdOn = Date(cal.timeInMillis)
     }
 
     private fun configureToolBar() {

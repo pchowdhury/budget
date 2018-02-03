@@ -20,7 +20,7 @@ import io.reactivex.SingleEmitter
  */
 class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     var transactionCallback: TransactionCallback = thisTransactionCallback
-    lateinit var categorizedRecord: CategorizedRecord
+     var categorizedRecord = getDefaultCategorizedRecord(false)
     val compositeDisposable = CompositeDisposable()
 
     fun setCategorizedRecord(recordId: String, isIncome: Boolean) {
@@ -32,7 +32,11 @@ class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
     }
 
     private fun openNewRecord(isIncome: Boolean) {
-        loadCategorizedRecord(CategorizedRecord("email", isIncome))
+        loadCategorizedRecord(getDefaultCategorizedRecord(isIncome))
+    }
+
+    fun getDefaultCategorizedRecord(isIncome: Boolean): CategorizedRecord {
+        return CategorizedRecord("email", isIncome)
     }
 
     fun getCategorizedRecordDisposable(recordId: String, isIncome: Boolean): Disposable {

@@ -97,7 +97,9 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
                             selectedCategorizedRecord?.categoryId = if (deselecting) -1 else position
                             notifyDataSetChanged()
                         })
-                imgView.setImageResource(if ((category.id - 1) < iconArr.size) iconArr[(category.id - 1)] else iconArr[iconArr.size - 1])
+                imgView.setImageResource(iconArr[iconArr.size - 1])
+
+                imgView.setImageResource(if ((category.id < iconArr.size) && category.id != -1) iconArr[(category.id)] else iconArr[iconArr.size - 1])
                 imgView.isSelected = position == selectedCategorizedRecord?.categoryId
             }
         }
