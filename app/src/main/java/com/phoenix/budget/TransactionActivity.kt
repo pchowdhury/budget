@@ -14,6 +14,7 @@ import com.phoenix.budget.databinding.ActivityTransactionBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.presenter.TransactionPresenter
+import com.phoenix.budget.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,14 +42,13 @@ class TransactionActivity : AppCompatActivity(), TransactionCallback {
         pickDate.setOnClickListener({onSelectDate()})
 
         RxTextView.afterTextChangeEvents(binding.editTitle)
-                .subscribe { text -> presenter.categorizedRecord.title = text.toString() }
+                .subscribe { textChangeEvent -> presenter.categorizedRecord.title = textChangeEvent.editable().toString() }
 
-//        RxTextView.afterTextChangeEvents(binding.editAmount)
-//                .subscribe { text -> presenter.categorizedRecord.amount = text.toString().toDouble() }
+        RxTextView.afterTextChangeEvents(binding.editAmount)
+                .subscribe { textChangeEvent -> presenter.categorizedRecord.amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
 
         RxTextView.afterTextChangeEvents(binding.editNote)
-                .subscribe { text -> presenter.categorizedRecord.note = text.toString() }
-
+                .subscribe { textChangeEvent -> presenter.categorizedRecord.note = textChangeEvent.editable().toString() }
     }
 
 
