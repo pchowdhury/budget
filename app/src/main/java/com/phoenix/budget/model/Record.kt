@@ -22,7 +22,7 @@ open class Record() {
     var categoryId: Int = -1
 
     @ColumnInfo(name = "amount")
-    var amount: Double = Double.MIN_VALUE
+    var amount: Double = 0.toDouble()
 
     @ColumnInfo(name = "is_income")
     var isIncome: Boolean = false

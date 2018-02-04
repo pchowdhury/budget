@@ -5,7 +5,7 @@
     tools:context="com.phoenix.budget.DashboardActivity">
 
     <data>
-
+        <import type="com.phoenix.budget.utils.StringUtils"/>
         <variable
             name="presenter"
             type="com.phoenix.budget.presenter.TransactionPresenter" />
@@ -72,8 +72,12 @@
                     android:drawablePadding="@dimen/icon_padding"
                     android:drawableTint="@android:color/darker_gray"
                     android:hint="@string/hint_amount"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:maxLength="10"
                     android:padding="@dimen/transaction_padding"
-                    android:text="@{categorizedRecord.title}" />
+                    android:singleLine="true"
+                    android:text="@{StringUtils.getValidCurrencyString(categorizedRecord.amount)}" />
 
                 <View
                     android:layout_width="match_parent"

@@ -12,5 +12,14 @@ class StringUtils {
                 } else {
                     value.toDouble()
                 }
+
+        @JvmStatic
+        fun getValidCurrencyString(double: Double?): String {
+            if (double==null || double == 0.toDouble()) {
+                return ""
+            } else {
+                return double.toString()
+            }
+        }
     }
 }
