@@ -1,8 +1,7 @@
 package com.phoenix.budget.presenter
 
-import com.phoenix.budget.TransactionCallback
+import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.CategorizedRecord
-import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
@@ -11,15 +10,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.SingleEmitter
-
 
 
 /**
  * Created by Pushpan on 26/01/18.
  */
-class TransactionPresenter(thisTransactionCallback: TransactionCallback) {
-    var transactionCallback: TransactionCallback = thisTransactionCallback
+class TransactionPresenter(thisTransactionCallback: RecordCallback) {
+    var transactionCallback: RecordCallback = thisTransactionCallback
      var categorizedRecord = getDefaultCategorizedRecord(false)
     val compositeDisposable = CompositeDisposable()
 

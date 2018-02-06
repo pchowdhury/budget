@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.phoenix.budget.DashboardActivity">
 
@@ -43,13 +44,14 @@
 
         <include
             android:id="@+id/scrollview"
-            layout="@layout/content_dashboard" />
+            layout="@layout/content_dashboard"
+            bind:presenter="@{presenter}"/>
 
         <FrameLayout
             android:id="@+id/menu_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|center_horizontal"/>
+            android:layout_gravity="bottom|center_horizontal" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

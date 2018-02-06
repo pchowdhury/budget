@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TransactionActivity : AppCompatActivity(), TransactionCallback {
+class RecordActivity : AppCompatActivity(), RecordCallback {
     lateinit var binding: ActivityTransactionBinding
     lateinit var presenter: TransactionPresenter
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }

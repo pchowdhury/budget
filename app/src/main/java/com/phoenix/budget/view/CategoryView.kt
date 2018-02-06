@@ -84,7 +84,7 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
         compositeDisposable.clear()
     }
 
-    inner abstract class CategoryBaseAdapter : RecyclerView.Adapter<CategoryBaseAdapter.CategoryViewHolder>() {
+    inner class CategoryAdapter(val category: List<Category>) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
         inner class CategoryViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
             // each data item is just a string in this case
             val imgView = binding.root.findViewById<ImageView>(R.id.imgView)
@@ -117,24 +117,15 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
             holder.bind(getDataAtPosition(position), position)
         }
 
-
-        abstract fun getDataAtPosition(position: Int): Category
-
-        abstract fun getLayoutIdForType(viewType: Int): Int
-
-    }
-
-
-    inner class CategoryAdapter(val category: List<Category>) : CategoryBaseAdapter() {
-        override fun getDataAtPosition(position: Int): Category {
+         fun getDataAtPosition(position: Int): Category {
             return category[position]
         }
 
-        override fun getLayoutIdForType(viewType: Int): Int {
+         fun getLayoutIdForType(viewType: Int): Int {
             return R.layout.category_item
         }
 
-        override fun getItemCount(): Int {
+         override fun getItemCount(): Int {
             return category.size
         }
     }

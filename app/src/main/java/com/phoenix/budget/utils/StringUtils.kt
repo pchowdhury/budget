@@ -15,7 +15,7 @@ class StringUtils {
 
         @JvmStatic
         fun getValidCurrencyString(double: Double?): String {
-            if (double==null || double == 0.toDouble()) {
+            if (double==null || double == 0f.toDouble()) {
                 return ""
             } else {
                 return double.toString()

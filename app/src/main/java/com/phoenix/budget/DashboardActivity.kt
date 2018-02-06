@@ -38,7 +38,7 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         return true
     }
 
-    override fun onSelectMenuItem(menuItem: PopMenuItemType) = startTransaction(menuItem)
+    override fun onSelectMenuItem(menuItem: PopMenuItemType) = startRecord(menuItem)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -48,10 +48,10 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         }
     }
 
-     fun startTransaction(menuItem: PopMenuItemType){
-        val intent = Intent(this, TransactionActivity::class.java)
-         intent.putExtra(TransactionActivity.MODE, menuItem.ordinal)
-         intent.putExtra(TransactionActivity.RECORD_ID, "")
-        startActivity(intent)
+     fun startRecord(menuItem: PopMenuItemType){
+        val intent = Intent(this, RecordActivity::class.java)
+         intent.putExtra(RecordActivity.MODE, menuItem.ordinal)
+         intent.putExtra(RecordActivity.RECORD_ID, "")
+         startActivity(intent)
     }
 }
