@@ -107,7 +107,7 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
             // create a new view
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, getLayoutIdForType(viewType), parent, false)
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, R.layout.category_item, parent, false)
             // set the view's size, margins, paddings and layout parameters
             return CategoryViewHolder(binding)
         }
@@ -117,12 +117,8 @@ class CategoryView @kotlin.jvm.JvmOverloads constructor(
             holder.bind(getDataAtPosition(position), position)
         }
 
-         fun getDataAtPosition(position: Int): Category {
+         private fun getDataAtPosition(position: Int): Category {
             return category[position]
-        }
-
-         fun getLayoutIdForType(viewType: Int): Int {
-            return R.layout.category_item
         }
 
          override fun getItemCount(): Int {

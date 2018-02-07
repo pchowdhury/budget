@@ -16,4 +16,5 @@
     <dimen name="border_width">1dp</dimen>
     <dimen name="category_item_size">50dp</dimen>
     <dimen name="category_item_margin">5dp</dimen>
+    <dimen name="transacation_item_margin">5dp</dimen>
 </resources>
