@@ -1,5 +1,6 @@
 package com.phoenix.budget
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -24,6 +25,8 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
     val  menuFragment = MenuFragment()
     var iconArr: IntArray? = null
 
+    val REQUEST_ADD = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
@@ -32,7 +35,6 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         presenter = DashboardPresenter(this)
         binding.presenter = presenter
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
-        binding.scrollview!!.recycleView.layoutManager = LinearLayoutManager(this)
     }
 
 
@@ -47,10 +49,10 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
     }
 
     override fun updateRecords(list: List<Record>){
-        binding.scrollview?.recycleView?.adapter = RecordsAdapter(this, presenter,  list)
+        binding.contentDashboard?.cardViewRecords?.setCardList(presenter,  list)
     }
 
-    override fun getIconId(catogoryId: Int): Int = iconArr!!.get(catogoryId)
+    override fun getIconId(catogoryId: Int): Int = iconArr!![catogoryId]
 
     override fun showError(text: String) {
        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
@@ -76,6 +78,15 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         val intent = Intent(this, RecordActivity::class.java)
          intent.putExtra(RecordActivity.MODE, menuItem.ordinal)
          intent.putExtra(RecordActivity.RECORD_ID, "")
-         startActivity(intent)
+         startActivityForResult(intent, REQUEST_ADD)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            when(resultCode){
+                REQUEST_ADD -> presenter.loadReports()
+            }
+        }
     }
 }

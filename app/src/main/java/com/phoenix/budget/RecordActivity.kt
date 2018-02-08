@@ -1,5 +1,6 @@
 package com.phoenix.budget
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.databinding.DataBindingUtil
@@ -26,6 +27,7 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
     lateinit var menu: PopMenuItemType
+    var hasSaved = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,7 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
     private fun setUpUI() {
         menu = PopMenuItemType.values()[intent.getIntExtra(MODE, 0)]
         configureToolBar()
-        pickDate.setOnClickListener({onSelectDate()})
+        pickDate.setOnClickListener({ onSelectDate() })
 
         RxTextView.afterTextChangeEvents(binding.editTitle)
                 .subscribe { textChangeEvent -> presenter.categorizedRecord.title = textChangeEvent.editable().toString() }
@@ -99,7 +101,7 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
     }
 
     override fun showError(text: String) {
-       Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBindRecord(categorizedRecord: CategorizedRecord) {
@@ -131,15 +133,21 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
         return when (item.itemId) {
             R.id.action_ok -> {
                 presenter.save()
+                validateResult()
                 finish()
                 return true
             }
             android.R.id.home -> {
+                validateResult()
                 finish()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun validateResult(){
+        setResult(if (hasSaved) Activity.RESULT_OK else Activity.RESULT_CANCELED)
     }
 
     companion object {

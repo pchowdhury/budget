@@ -18,7 +18,7 @@ class DashboardPresenter(thisDashboard: DashboardCallback) {
         loadReports()
     }
 
-    private fun loadReports() {
+    fun loadReports() {
         compositeDisposable.add(BudgetApp.database.RecordsDao().findAllRecords()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -30,4 +30,5 @@ class DashboardPresenter(thisDashboard: DashboardCallback) {
     }
 
     fun getIconId(catogoryId: Int): Int = dashboardCallback.getIconId(catogoryId)
+
 }

@@ -46,6 +46,7 @@ class RecordsAdapter(val context: Context, val presenter : DashboardPresenter, v
         holder.bind(getDataAtPosition(position))
     }
 
+
     private fun getDataAtPosition(position: Int): Record {
         return reports[position]
     }
