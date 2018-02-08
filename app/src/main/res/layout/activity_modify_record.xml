@@ -7,7 +7,7 @@
         <import type="com.phoenix.budget.utils.StringUtils"/>
         <variable
             name="presenter"
-            type="com.phoenix.budget.presenter.TransactionPresenter" />
+            type="com.phoenix.budget.presenter.ModifyRecordPresenter" />
 
         <variable
             name="categorizedRecord"

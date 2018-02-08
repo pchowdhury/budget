@@ -15,7 +15,7 @@ import io.reactivex.observers.DisposableSingleObserver
 /**
  * Created by Pushpan on 26/01/18.
  */
-class TransactionPresenter(thisTransactionCallback: RecordCallback) {
+class ModifyRecordPresenter(thisTransactionCallback: RecordCallback) {
     var transactionCallback: RecordCallback = thisTransactionCallback
      var categorizedRecord = getDefaultCategorizedRecord(false)
     val compositeDisposable = CompositeDisposable()
@@ -40,7 +40,7 @@ class TransactionPresenter(thisTransactionCallback: RecordCallback) {
        return  BudgetApp.database.RecordsDao().findCategorizedRecordById(recordId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({t -> loadCategorizedRecord(t)},{ error -> showError()})
+                .subscribe ({t -> loadCategorizedRecord(t)},{ _ -> showError()})
     }
 
     private fun loadCategorizedRecord(t: CategorizedRecord) {

@@ -12,5 +12,6 @@
     <string name="list_records">Recent transactions</string>
     <string name="label_list_empty">No trasactions</string>
     <string name="list_more">Show More...</string>
+    <string name="title_records">Records</string>
 
 </resources>

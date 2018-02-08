@@ -12,7 +12,7 @@
 
         <variable
             name="presenter"
-            type="com.phoenix.budget.presenter.DashboardPresenter" />
+            type="com.phoenix.budget.presenter.ReportPresenter" />
     </data>
 
     <RelativeLayout

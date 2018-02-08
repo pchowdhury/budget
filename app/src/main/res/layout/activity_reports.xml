@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.phoenix.budget.DashboardActivity">
+    tools:context="com.phoenix.budget.RecordsActivity">
 
     <data>
         <variable
@@ -37,13 +37,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
+                    app:title="@string/app_name"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
         <include
-            android:id="@+id/content_dashboard"
-            layout="@layout/content_dashboard"
+            android:id="@+id/content_reports"
+            layout="@layout/content_reports"
             bind:presenter="@{presenter}"/>
 
         <FrameLayout

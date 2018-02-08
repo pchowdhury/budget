@@ -1,12 +1,9 @@
 package com.phoenix.budget
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -15,47 +12,42 @@ import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.DashboardPresenter
-import com.phoenix.budget.view.RecordsAdapter
+import com.phoenix.budget.presenter.ReportPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
-    lateinit var binding:ActivityDashboardBinding
-    lateinit var presenter: DashboardPresenter
-    val  menuFragment = MenuFragment()
-    var iconArr: IntArray? = null
+class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
+    lateinit var binding: ActivityDashboardBinding
+    lateinit var presenter: ReportPresenter
+    val menuFragment = MenuFragment()
 
     val REQUEST_ADD = 1
+    val REQUEST_VIEW = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
-        iconArr = loadIcons(this)
-        presenter = DashboardPresenter(this)
+        presenter = ReportPresenter(this)
         binding.presenter = presenter
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
+        binding.contentDashboard?.cardViewRecords?.presenter = presenter
+        loadDashboardRecords()
     }
 
-
-    private fun loadIcons(context: Context): IntArray {
-        val ar = context.resources.obtainTypedArray(R.array.category_icons)
-        val len = ar.length()
-        val resIds = IntArray(len)
-        for (i in 0 until len)
-            resIds[i] = ar.getResourceId(i, 0)
-        ar.recycle()
-        return resIds
+    fun loadDashboardRecords(){
+        presenter.loadRecords(3)
     }
 
-    override fun updateRecords(list: List<Record>){
-        binding.contentDashboard?.cardViewRecords?.setCardList(presenter,  list)
+    override fun updateRecords(list: List<Record>) {
+        binding.contentDashboard?.cardViewRecords?.setCardList(list)
     }
 
-    override fun getIconId(catogoryId: Int): Int = iconArr!![catogoryId]
+    override fun showReport(categoryId: Int) {
+        starViewRecords(categoryId)
+    }
 
     override fun showError(text: String) {
-       Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -64,7 +56,7 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         return true
     }
 
-    override fun onSelectMenuItem(menuItem: PopMenuItemType) = startRecord(menuItem)
+    override fun onSelectMenuItem(menuItem: PopMenuItemType) = startModifyRecord(menuItem)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -74,18 +66,24 @@ class DashboardActivity : AppCompatActivity(), DashboardCallback, MenuCallback {
         }
     }
 
-     fun startRecord(menuItem: PopMenuItemType){
-        val intent = Intent(this, RecordActivity::class.java)
-         intent.putExtra(RecordActivity.MODE, menuItem.ordinal)
-         intent.putExtra(RecordActivity.RECORD_ID, "")
-         startActivityForResult(intent, REQUEST_ADD)
+    fun startModifyRecord(menuItem: PopMenuItemType) {
+        val intent = Intent(this, ModifyRecordActivity::class.java)
+        intent.putExtra(ModifyRecordActivity.MODE, menuItem.ordinal)
+        intent.putExtra(ModifyRecordActivity.RECORD_ID, "")
+        startActivityForResult(intent, REQUEST_ADD)
+    }
+
+    fun starViewRecords(category: Int) {
+        val intent = Intent(this, RecordsActivity::class.java)
+        intent.putExtra(RecordsActivity.REQUEST_VIEW, category)
+        startActivityForResult(intent, REQUEST_VIEW)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
-            when(resultCode){
-                REQUEST_ADD -> presenter.loadReports()
+        if (resultCode == Activity.RESULT_OK) {
+            when (resultCode) {
+                REQUEST_ADD ->  loadDashboardRecords()
             }
         }
     }

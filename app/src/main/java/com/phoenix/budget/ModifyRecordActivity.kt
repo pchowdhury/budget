@@ -11,19 +11,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.jakewharton.rxbinding.widget.RxTextView
-import com.phoenix.budget.databinding.ActivityTransactionBinding
+import com.phoenix.budget.databinding.ActivityModifyRecordBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
-import com.phoenix.budget.presenter.TransactionPresenter
+import com.phoenix.budget.presenter.ModifyRecordPresenter
 import com.phoenix.budget.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class RecordActivity : AppCompatActivity(), RecordCallback {
-    lateinit var binding: ActivityTransactionBinding
-    lateinit var presenter: TransactionPresenter
+class ModifyRecordActivity : AppCompatActivity(), RecordCallback {
+    lateinit var binding: ActivityModifyRecordBinding
+    lateinit var presenter: ModifyRecordPresenter
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
     lateinit var menu: PopMenuItemType
@@ -31,8 +31,8 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_transaction)
-        presenter = TransactionPresenter(this)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_modify_record)
+        presenter = ModifyRecordPresenter(this)
         binding.presenter = presenter
         setUpUI()
         presenter.setCategorizedRecord(intent.getStringExtra(RECORD_ID), intent.getBooleanExtra(IS_INCOME, false))
@@ -55,7 +55,7 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
 
 
     private fun onSelectDate() {
-        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -72,7 +72,7 @@ class RecordActivity : AppCompatActivity(), RecordCallback {
     }
 
     private fun onSelectTime() {
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
             cal.set(Calendar.MINUTE, minute)
             updateDateInView()

@@ -5,7 +5,7 @@ import com.phoenix.budget.model.Record
 /**
  * Created by Pushpan on 26/01/18.
  */
-interface DashboardCallback : ErrorCallback {
+interface ReportCallback : CategoryCallback, ErrorCallback {
     fun updateRecords(list: List<Record>)
-    fun getIconId(catogoryId: Int): Int
+    fun showReport(categoryId:Int)
 }

@@ -11,7 +11,7 @@ import android.widget.ImageView
 import com.phoenix.budget.BR
 import com.phoenix.budget.R
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.DashboardPresenter
+import com.phoenix.budget.presenter.ReportPresenter
 
 
 /**
@@ -23,7 +23,7 @@ fun setImageIcon(view: ImageView, resId : Int) {
     view.setImageResource(resId)
 }
 
-class RecordsAdapter(val context: Context, val presenter : DashboardPresenter, val reports: List<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
+class RecordsAdapter(val context: Context, val presenter : ReportPresenter, val reports: List<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
