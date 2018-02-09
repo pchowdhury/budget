@@ -54,7 +54,7 @@
                     android:drawableStart="@drawable/new_entry"
                     android:drawableTint="@android:color/darker_gray"
                     android:hint="@string/hint_label"
-                    android:padding="@dimen/transaction_padding"
+                    android:padding="@dimen/record_padding"
                     android:text="@{categorizedRecord.title}" />
 
                 <View
@@ -74,7 +74,7 @@
                     android:inputType="numberDecimal"
                     android:lines="1"
                     android:maxLength="10"
-                    android:padding="@dimen/transaction_padding"
+                    android:padding="@dimen/record_padding"
                     android:singleLine="true"
                     android:text="@{StringUtils.getValidCurrencyString(categorizedRecord.amount)}" />
 
@@ -95,7 +95,7 @@
                     android:drawableStart="@drawable/time"
                     android:drawableTint="@android:color/darker_gray"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/transaction_padding"
+                    android:padding="@dimen/record_padding"
                     android:text="@{categorizedRecord.title}" />
 
                 <View
@@ -127,7 +127,7 @@
                     android:hint="@string/hint_notes"
                     android:lines="3"
                     android:maxLines="3"
-                    android:padding="@dimen/transaction_padding"
+                    android:padding="@dimen/record_padding"
                     android:text="@{categorizedRecord.note}" />
             </LinearLayout>
         </ScrollView>

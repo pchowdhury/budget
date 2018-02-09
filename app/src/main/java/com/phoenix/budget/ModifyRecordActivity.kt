@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ModifyRecordActivity : AppCompatActivity(), RecordCallback {
+class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
     lateinit var binding: ActivityModifyRecordBinding
     lateinit var presenter: ModifyRecordPresenter
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.phoenix.budget.utils.StringUtils" />
+
+        <variable
+            name="report"
+            type="com.phoenix.budget.model.Record" />
+
+        <variable
+            name="presenter"
+            type="com.phoenix.budget.presenter.RecordPresenter" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/category_item_margin"
+        android:scaleType="center">
+
+        <RelativeLayout
+            android:id="@+id/dateView"
+            android:layout_width="@dimen/reminder_date_width"
+            android:layout_height="@dimen/reminder_date_width"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/date_bg">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textMonth"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="@{StringUtils.getDayfrom(report.createdOn)}"
+                android:textColor="@color/color_date_reminder_day"
+                android:textSize="@dimen/reminder_date_day_size"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/color_date_reminder_month_bg"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@{StringUtils.getMonthfrom(report.createdOn)}"
+                android:textColor="@color/color_date_reminder_month"
+                android:textSize="@dimen/reminder_date_month_size" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/dateView"
+            android:layout_alignTop="@+id/dateView"
+            android:layout_marginBottom="@dimen/reminder_item_margin_vertical"
+            android:layout_marginEnd="@dimen/reminder_item_margin_horizontal"
+            android:layout_marginLeft="@dimen/reminder_item_margin_horizontal"
+            android:layout_marginRight="@dimen/reminder_item_margin_horizontal"
+            android:layout_marginStart="@dimen/reminder_item_margin_horizontal"
+            android:layout_marginTop="@dimen/reminder_item_margin_vertical"
+            android:layout_toEndOf="@+id/dateView"
+            android:layout_toLeftOf="@+id/imgCheck"
+            android:layout_toRightOf="@+id/dateView"
+            android:layout_toStartOf="@+id/imgCheck"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@{report.title}"
+                android:textColor="@color/colorAccent" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/txtAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@{StringUtils.getValidCurrencyString(report.amount)}"
+                android:textColor="@color/colorAccent" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/record_item_margin"
+            android:src="@drawable/check_ok"
+            android:tint="@color/colorAccent"
+            bind:checkable="@{true}"
+            bind:report="@{report}"
+            bind:presenter="@{presenter}" />
+    </RelativeLayout>
+</layout>

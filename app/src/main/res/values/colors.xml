@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="color_border">#A1A1A1</color>
     <color name="album_title">#0000FF</color>
+    <color name="color_date_reminder_day">#000000</color>
+    <color name="color_date_reminder_month">#ffffff</color>
+    <color name="color_date_reminder_month_bg">#800000</color>
 </resources>

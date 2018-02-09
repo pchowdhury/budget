@@ -27,5 +27,5 @@ open class BudgetBaseActivity : AppCompatActivity(), CategoryCallback {
         return resIds
     }
 
-    override fun getIconId(catogoryId: Int): Int = iconArr!![catogoryId]
+    override fun getIconId(catogoryId: Int): Int = if (catogoryId == -1) iconArr!![iconArr!!.size - 1] else iconArr!![catogoryId]
 }

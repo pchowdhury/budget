@@ -20,7 +20,7 @@ class RecentExpensesDashboardView @kotlin.jvm.JvmOverloads constructor(
     }
 
     override fun onSwipeRemove(position: Int){
-        presenter.removeDashboardRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(position))
+        presenter.removeDashboardRecentRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(position))
     }
 }
 

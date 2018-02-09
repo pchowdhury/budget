@@ -1,5 +1,8 @@
 package com.phoenix.budget.utils
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * Created by Pushpan on 03/02/18.
  */
@@ -20,6 +23,20 @@ class StringUtils {
             } else {
                 return double.toString()
             }
+        }
+
+        @JvmStatic
+        fun getMonthfrom(date: Date?): String {
+            val myFormat = "MMM" // mention the format you need
+            val sdf = SimpleDateFormat(myFormat, Locale.US)
+            return  sdf.format(date)
+        }
+
+        @JvmStatic
+        fun getDayfrom(date: Date?): String {
+            val myFormat = "dd" // mention the format you need
+            val sdf = SimpleDateFormat(myFormat, Locale.US)
+            return  sdf.format(date)
         }
     }
 }

@@ -12,12 +12,22 @@ import io.reactivex.Flowable
 @Dao
 interface RecordsDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records ORDER BY created_on DESC")
-    fun findAllRecords(): Flowable<MutableList<Record>>
+    @Query("SELECT * FROM records WHERE created_on < :time ORDER BY created_on DESC")
+    fun findAllRecords(time: Long): Flowable<MutableList<Record>>
+
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records ORDER BY created_on DESC LIMIT :limit")
-    fun findAllRecords(limit:Int): Flowable<MutableList<Record>>
-//    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
+    @Query("SELECT * FROM records WHERE created_on < :time ORDER BY created_on DESC LIMIT :limit")
+    fun findAllRecords(time: Long, limit:Int): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE created_on >  :time ORDER BY created_on ASC")
+    fun findAllReminders(time:Long): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE created_on >  :time ORDER BY created_on ASC LIMIT :limit")
+    fun findAllReminders(time:Long, limit:Int): Flowable<MutableList<Record>>
+
+    //    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records where id = :id")
     fun findRecordById(id: String): Flowable<Record>

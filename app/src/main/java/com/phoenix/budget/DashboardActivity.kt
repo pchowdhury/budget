@@ -12,13 +12,13 @@ import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.ReportPresenter
+import com.phoenix.budget.presenter.RecordPresenter
 import com.phoenix.budget.view.DashboardCardView
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
+class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     lateinit var binding: ActivityDashboardBinding
-    lateinit var presenter: ReportPresenter
+    lateinit var presenter: RecordPresenter
     val menuFragment = MenuFragment()
 
 
@@ -29,23 +29,37 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
-        presenter = ReportPresenter(this)
+        presenter = RecordPresenter(this)
         binding.presenter = presenter
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
+        loadDashboard()
+    }
+
+    private fun loadDashboard() {
         binding.contentDashboard?.cardViewRecentRecords?.presenter = presenter
+        binding.contentDashboard?.cardViewUpcomingReminders?.presenter = presenter
         loadDashboardRecords()
     }
 
     fun loadDashboardRecords(){
-        presenter.loadRecords(DashboardCardView.MAX_ROWS)
+        loadRecords()
+        loadReminders()
     }
 
-    override fun updateRecords(list: MutableList<Record>) {
+    override fun updateRecentRecords(list: MutableList<Record>) {
         binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
     }
 
-    override fun reloadRecords() {
-        loadDashboardRecords()
+    override fun updateReminders(list: MutableList<Record>) {
+        binding.contentDashboard?.cardViewUpcomingReminders?.setCardList(list)
+    }
+
+    override fun loadRecords() {
+        presenter.loadRecentRecords(DashboardCardView.MAX_ROWS)
+    }
+
+    override fun loadReminders() {
+        presenter.loadReminders(DashboardCardView.MAX_ROWS)
     }
 
     override fun showReport(categoryId: Int) {

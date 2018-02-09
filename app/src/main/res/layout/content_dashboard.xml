@@ -9,7 +9,7 @@
 
         <variable
             name="presenter"
-            type="com.phoenix.budget.presenter.ReportPresenter" />
+            type="com.phoenix.budget.presenter.RecordPresenter" />
     </data>
 
     <android.support.v4.widget.NestedScrollView
@@ -30,10 +30,10 @@
                 app:label="@string/list_recent_expenses" />
 
             <com.phoenix.budget.view.UpcomingRemindersDashboardView
-                android:id="@+id/card_view_records"
+                android:id="@+id/card_view_upcoming_reminders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:label="@string/list_upcomeing_reminders" />
+                app:label="@string/list_upcoming_reminders" />
         </LinearLayout>
 
 

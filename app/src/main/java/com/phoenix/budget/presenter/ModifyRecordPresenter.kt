@@ -1,6 +1,6 @@
 package com.phoenix.budget.presenter
 
-import com.phoenix.budget.RecordCallback
+import com.phoenix.budget.ModifyRecordCallback
 import com.phoenix.budget.model.CategorizedRecord
 import com.phoenix.budget.persistence.BudgetApp
 import io.reactivex.Single
@@ -15,8 +15,8 @@ import io.reactivex.observers.DisposableSingleObserver
 /**
  * Created by Pushpan on 26/01/18.
  */
-class ModifyRecordPresenter(thisTransactionCallback: RecordCallback) {
-    var transactionCallback: RecordCallback = thisTransactionCallback
+class ModifyRecordPresenter(thisTransactionCallbackModify: ModifyRecordCallback) {
+    var transactionCallbackModify: ModifyRecordCallback = thisTransactionCallbackModify
      var categorizedRecord = getDefaultCategorizedRecord(false)
     val compositeDisposable = CompositeDisposable()
 
@@ -45,7 +45,7 @@ class ModifyRecordPresenter(thisTransactionCallback: RecordCallback) {
 
     private fun loadCategorizedRecord(t: CategorizedRecord) {
         categorizedRecord = t
-        transactionCallback.onBindRecord(categorizedRecord)
+        transactionCallbackModify.onBindRecord(categorizedRecord)
     }
 
     private fun showError(){
@@ -72,7 +72,7 @@ class ModifyRecordPresenter(thisTransactionCallback: RecordCallback) {
               .subscribeOn(Schedulers.io())
               .subscribeWith(object : DisposableSingleObserver<Long>() {
                     override fun onSuccess(ids: Long) {
-                        transactionCallback.closeRecord()
+                        transactionCallbackModify.closeRecord()
                     }
                     override fun onError(e: Throwable) {
                         showError()

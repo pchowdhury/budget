@@ -15,12 +15,12 @@ class UpcomingRemindersDashboardView @kotlin.jvm.JvmOverloads constructor(
 
 
     override fun setCardList(list: MutableList<Record>) {
-        recycleView.adapter = RecordsAdapter(context, presenter, list)
+        recycleView.adapter = RemindersAdapter(context, presenter, list)
         listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onSwipeRemove(position: Int){
-        presenter.removeDashboardRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(position))
+//        presenter.removeDashboardReminder((recycleView.adapter as RemindersAdapter).getDataAtPosition(position))
     }
 }
 

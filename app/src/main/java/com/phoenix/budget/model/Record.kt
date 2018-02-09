@@ -66,4 +66,7 @@ open class Record() {
 //        this.userId = userId
 //        this.isIncome = isIncome
 //    }
+
+    fun isReminder(): Boolean = createdOn.after(Date(System.currentTimeMillis()))
+
 }

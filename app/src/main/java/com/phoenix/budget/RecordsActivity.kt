@@ -10,14 +10,14 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityReportsBinding
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.ReportPresenter
+import com.phoenix.budget.presenter.RecordPresenter
 import com.phoenix.budget.view.DashboardCardView
 import com.phoenix.budget.view.RecordsAdapter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class RecordsActivity : BudgetBaseActivity(), ReportCallback {
+class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     lateinit var binding: ActivityReportsBinding
-    lateinit var presenter: ReportPresenter
+    lateinit var presenter: RecordPresenter
 
     var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -26,7 +26,7 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            presenter.removeDashboardRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
+            presenter.removeDashboardRecentRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
         }
     }
 
@@ -35,7 +35,7 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reports)
         setSupportActionBar(toolbar)
         configureToolBar()
-        presenter = ReportPresenter(this)
+        presenter = RecordPresenter(this)
         binding.presenter = presenter
         binding.contentReports?.recycleView?.layoutManager = LinearLayoutManager(this)
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
@@ -50,27 +50,29 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    fun loadRecords() {
+    override fun loadRecords() {
         val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
         val isRestricted = intent.getBooleanExtra(INTENT_REQUEST_IS_RESTRICTED, false)
 
         if (categoryId == -1) {
-            presenter.loadRecords(-1)
+            presenter.loadRecentRecords(-1)
         } else {
             presenter.loadRecordsByCategoryId(categoryId, if (isRestricted) DashboardCardView.MAX_ROWS else -1)
         }
-
     }
+
+    override fun loadReminders() {
+    }
+
 
     override fun showReport(categoryId: Int) {
     }
 
-    override fun updateRecords(list: MutableList<Record>) {
+    override fun updateRecentRecords(list: MutableList<Record>) {
         binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, presenter, list)
     }
 
-    override fun reloadRecords() {
-        loadRecords()
+    override fun updateReminders(list: MutableList<Record>) {
     }
 
     override fun showError(text: String) {
