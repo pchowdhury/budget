@@ -27,7 +27,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:padding="@dimen/list_label_padding"
-                android:text="@string/list_records"
                 android:textAllCaps="true" />
 
             <LinearLayout

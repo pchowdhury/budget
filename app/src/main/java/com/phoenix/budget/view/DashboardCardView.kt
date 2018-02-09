@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.dashboard_card_view.view.*
  * Created by Pushpan on 08/02/18.
  */
 
-class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
+open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
 
     lateinit var presenter: ReportPresenter
@@ -29,8 +29,7 @@ class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            (recycleView.adapter as RecordsAdapter).removeItem(viewHolder.adapterPosition)
-            presenter.removeDashboardRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
+            onSwipeRemove(viewHolder.adapterPosition)
         }
     }
 
@@ -46,9 +45,10 @@ class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         itemTouchHelper.attachToRecyclerView(recycleView)
     }
 
-    fun setCardList(list: MutableList<Record>) {
-        recycleView.adapter = RecordsAdapter(context, presenter, list)
-        listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+    open fun setCardList(list: MutableList<Record>) {
+    }
+
+    open fun onSwipeRemove(position: Int){
     }
 
     fun onMoreClick() {

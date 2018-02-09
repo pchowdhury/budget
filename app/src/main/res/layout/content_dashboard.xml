@@ -18,11 +18,23 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.phoenix.budget.view.DashboardCardView
-            android:id="@+id/card_view_records"
+        <LinearLayout android:id="@+id/layout_lists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:label="@string/list_records" />
+            android:orientation="vertical">
+
+            <com.phoenix.budget.view.RecentExpensesDashboardView
+                android:id="@+id/card_view_recent_records"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:label="@string/list_recent_expenses" />
+
+            <com.phoenix.budget.view.UpcomingRemindersDashboardView
+                android:id="@+id/card_view_records"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:label="@string/list_upcomeing_reminders" />
+        </LinearLayout>
 
 
         <!--<android.support.v7.widget.RecyclerView-->

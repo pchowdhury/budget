@@ -9,8 +9,9 @@
     <string name="hint_category">Notes</string>
     <string name="error_no_category">No Categories</string>
 
-    <string name="list_records">Recent transactions</string>
-    <string name="label_list_empty">No trasactions</string>
+    <string name="list_recent_expenses">Recent Expenses</string>
+    <string name="list_upcomeing_reminders">Upcoming Reminders</string>
+    <string name="label_list_empty">No records</string>
     <string name="list_more">Show More...</string>
     <string name="title_records">Records</string>
 

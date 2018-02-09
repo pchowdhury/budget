@@ -32,7 +32,7 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
         presenter = ReportPresenter(this)
         binding.presenter = presenter
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
-        binding.contentDashboard?.cardViewRecords?.presenter = presenter
+        binding.contentDashboard?.cardViewRecentRecords?.presenter = presenter
         loadDashboardRecords()
     }
 
@@ -41,13 +41,12 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
     }
 
     override fun updateRecords(list: MutableList<Record>) {
-        binding.contentDashboard?.cardViewRecords?.setCardList(list)
+        binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
     }
 
     override fun reloadRecords() {
         loadDashboardRecords()
     }
-
 
     override fun showReport(categoryId: Int) {
         starViewRecords(categoryId)
