@@ -18,9 +18,10 @@ import com.phoenix.budget.presenter.ReportPresenter
  * Created by Pushpan on 05/02/18.
  */
 
-@BindingAdapter("bind:icon")
-fun setImageIcon(view: ImageView, resId : Int) {
-    view.setImageResource(resId)
+@BindingAdapter("bind:icon", "bind:presenter")
+fun setImageIcon(view: ImageView, categoryId : Int, presenter: ReportPresenter) {
+    view.setImageResource(presenter.getIconId(categoryId))
+    view.setOnClickListener {  presenter.reportCallback.showReport(categoryId) }
 }
 
 class RecordsAdapter(val context: Context, val presenter : ReportPresenter, val reports: List<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {

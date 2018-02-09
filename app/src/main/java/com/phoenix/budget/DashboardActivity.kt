@@ -13,6 +13,7 @@ import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.ReportPresenter
+import com.phoenix.budget.view.DashboardCardView
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
@@ -20,8 +21,9 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
     lateinit var presenter: ReportPresenter
     val menuFragment = MenuFragment()
 
-    val REQUEST_ADD = 1
-    val REQUEST_VIEW = 2
+
+    private val REQUEST_ADD = 1
+    private val REQUEST_VIEW = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
     }
 
     fun loadDashboardRecords(){
-        presenter.loadRecords(3)
+        presenter.loadRecords(DashboardCardView.MAX_ROWS)
     }
 
     override fun updateRecords(list: List<Record>) {
@@ -73,12 +75,6 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
         startActivityForResult(intent, REQUEST_ADD)
     }
 
-    fun starViewRecords(category: Int) {
-        val intent = Intent(this, RecordsActivity::class.java)
-        intent.putExtra(RecordsActivity.REQUEST_VIEW, category)
-        startActivityForResult(intent, REQUEST_VIEW)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -86,5 +82,12 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
                 REQUEST_ADD ->  loadDashboardRecords()
             }
         }
+    }
+
+    fun starViewRecords(category: Int) {
+        val intent = Intent(this, RecordsActivity::class.java)
+        intent.putExtra(RecordsActivity.INTENT_REQUEST_VIEW, category)
+        intent.putExtra(RecordsActivity.INTENT_REQUEST_IS_RESTRICTED, true)
+        startActivityForResult(intent, REQUEST_VIEW)
     }
 }

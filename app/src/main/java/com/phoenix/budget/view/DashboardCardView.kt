@@ -38,4 +38,9 @@ class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
     fun onMoreClick(){
         presenter.reportCallback.showReport(-1)
     }
+
+    companion object {
+        @JvmStatic
+        val MAX_ROWS = 3
+    }
 }

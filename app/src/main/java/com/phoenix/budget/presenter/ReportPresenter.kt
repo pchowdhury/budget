@@ -34,11 +34,18 @@ class ReportPresenter(thisReport: ReportCallback) {
         }
     }
 
-    fun loadRecordsById(categoryId: Int, limit: Int) {
+    fun loadRecordsByCategoryId(categoryId: Int, limit: Int) {
+        if (limit == -1) {
+            compositeDisposable.add(BudgetApp.database.RecordsDao().findRecordsByCategoryId(categoryId)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ list -> reportCallback.updateRecords(list) }, { error -> showError(error) }))
+        }else{
             compositeDisposable.add(BudgetApp.database.RecordsDao().findRecordsByCategoryId(categoryId, limit)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> reportCallback.updateRecords(list) }, { error -> showError(error) }))
+        }
     }
 
     fun showError(t: Throwable) {

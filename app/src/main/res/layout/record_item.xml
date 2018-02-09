@@ -32,8 +32,10 @@
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/category_item_margin"
             android:background="@drawable/category_selector"
+            android:clickable="true"
             android:scaleType="center"
-            bind:icon="@{presenter.getIconId(report.categoryId)}" />
+            bind:icon="@{report.categoryId}"
+            bind:presenter="@{presenter}"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/title"
