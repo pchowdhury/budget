@@ -5,7 +5,7 @@ package com.phoenix.budget.fragment
  */
 enum class PopMenuItemType(val label: String) {
     Expense("Expense"),
-    FixedExpense("Fixed\nExpense"),
+    RecurringExpense("Recurring\nExpense"),
     Income("Income"),
-    FixedIncome("Fixed\nIncome");
+    RecurringIncome("Recurring\nIncome");
 }

@@ -48,9 +48,9 @@ class MenuFragment : Fragment() {
 
     private val menu: MutableList<PopMenuItem> = mutableListOf(
             PopMenuItem(PopMenuItemType.Expense),
-            PopMenuItem(PopMenuItemType.FixedExpense),
+            PopMenuItem(PopMenuItemType.RecurringExpense),
             PopMenuItem(PopMenuItemType.Income),
-            PopMenuItem(PopMenuItemType.FixedIncome)
+            PopMenuItem(PopMenuItemType.RecurringIncome)
     )
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
