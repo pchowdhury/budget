@@ -13,10 +13,10 @@ import io.reactivex.Flowable
 interface RecordsDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records ORDER BY created_on DESC")
-    fun findAllRecords(): Flowable<List<Record>>
+    fun findAllRecords(): Flowable<MutableList<Record>>
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records ORDER BY created_on DESC LIMIT :limit")
-    fun findAllRecords(limit:Int): Flowable<List<Record>>
+    fun findAllRecords(limit:Int): Flowable<MutableList<Record>>
 //    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records where id = :id")
@@ -32,11 +32,11 @@ interface RecordsDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE records.category_id = :id AND records.is_income = 0 LIMIT :limit")
-    fun findRecordsByCategoryId(id: Int, limit:Int): Flowable<List<Record>>
+    fun findRecordsByCategoryId(id: Int, limit:Int): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE records.category_id = :id AND records.is_income = 0")
-    fun findRecordsByCategoryId(id: Int): Flowable<List<Record>>
+    fun findRecordsByCategoryId(id: Int): Flowable<MutableList<Record>>
 
     @Insert(onConflict = REPLACE)
     fun insertRecord(record: Record) : Long

@@ -40,9 +40,14 @@ class DashboardActivity : BudgetBaseActivity(), ReportCallback, MenuCallback {
         presenter.loadRecords(DashboardCardView.MAX_ROWS)
     }
 
-    override fun updateRecords(list: List<Record>) {
+    override fun updateRecords(list: MutableList<Record>) {
         binding.contentDashboard?.cardViewRecords?.setCardList(list)
     }
+
+    override fun reloadRecords() {
+        loadDashboardRecords()
+    }
+
 
     override fun showReport(categoryId: Int) {
         starViewRecords(categoryId)

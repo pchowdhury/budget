@@ -3,6 +3,8 @@ package com.phoenix.budget
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,6 +19,17 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
     lateinit var binding: ActivityReportsBinding
     lateinit var presenter: ReportPresenter
 
+    var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            presenter.removeDashboardRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reports)
@@ -25,6 +38,8 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
         presenter = ReportPresenter(this)
         binding.presenter = presenter
         binding.contentReports?.recycleView?.layoutManager = LinearLayoutManager(this)
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView( binding.contentReports?.recycleView)
         loadRecords()
     }
 
@@ -50,8 +65,12 @@ class RecordsActivity : BudgetBaseActivity(), ReportCallback {
     override fun showReport(categoryId: Int) {
     }
 
-    override fun updateRecords(list: List<Record>) {
+    override fun updateRecords(list: MutableList<Record>) {
         binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, presenter, list)
+    }
+
+    override fun reloadRecords() {
+        loadRecords()
     }
 
     override fun showError(text: String) {

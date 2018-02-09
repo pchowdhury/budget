@@ -19,12 +19,12 @@ import com.phoenix.budget.presenter.ReportPresenter
  */
 
 @BindingAdapter("bind:icon", "bind:presenter")
-fun setImageIcon(view: ImageView, categoryId : Int, presenter: ReportPresenter) {
+fun setImageIcon(view: ImageView, categoryId: Int, presenter: ReportPresenter) {
     view.setImageResource(presenter.getIconId(categoryId))
-    view.setOnClickListener {  presenter.reportCallback.showReport(categoryId) }
+    view.setOnClickListener { presenter.reportCallback.showReport(categoryId) }
 }
 
-class RecordsAdapter(val context: Context, val presenter : ReportPresenter, val reports: List<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
+class RecordsAdapter(val context: Context, val presenter: ReportPresenter, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
@@ -48,10 +48,16 @@ class RecordsAdapter(val context: Context, val presenter : ReportPresenter, val 
     }
 
 
-    private fun getDataAtPosition(position: Int): Record {
+    fun getDataAtPosition(position: Int): Record {
         return reports[position]
     }
 
+    fun removeItem(position: Int) {
+        if (reports.size > position) {
+            reports.removeAt(position)
+            notifyItemChanged(position)
+        }
+    }
 
     override fun getItemCount(): Int {
         return reports.size
