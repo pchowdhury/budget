@@ -23,7 +23,7 @@ fun setImageIcon(view: ImageView, record: Record, presenter: RecordPresenter, ch
     if (checkable) {
         view.setOnClickListener { presenter.removeDashboardReminder(record) }
     } else {
-            view.setImageResource(presenter.getIconId(record.categoryId))
+        view.setImageResource(presenter.getIconId(record.categoryId))
         view.setOnClickListener { presenter.recordCallback.showReport(record.categoryId) }
     }
 }

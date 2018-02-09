@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.phoenix.budget.DashboardActivity">
 
@@ -18,7 +17,8 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout android:id="@+id/layout_lists"
+        <LinearLayout
+            android:id="@+id/layout_lists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -27,21 +27,15 @@
                 android:id="@+id/card_view_recent_records"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:empty="@string/label_list_records_empty"
                 app:label="@string/list_recent_expenses" />
 
             <com.phoenix.budget.view.UpcomingRemindersDashboardView
                 android:id="@+id/card_view_upcoming_reminders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:empty="@string/label_list_reminder_empty"
                 app:label="@string/list_upcoming_reminders" />
         </LinearLayout>
-
-
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/recycleView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="@dimen/category_item_margin" />-->
-
     </android.support.v4.widget.NestedScrollView>
 </layout>

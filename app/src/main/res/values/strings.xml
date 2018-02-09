@@ -11,7 +11,8 @@
 
     <string name="list_recent_expenses">Recent Expenses</string>
     <string name="list_upcoming_reminders">Upcoming Reminders</string>
-    <string name="label_list_empty">No records</string>
+    <string name="label_list_records_empty">No records</string>
+    <string name="label_list_reminder_empty">No reminders</string>
     <string name="list_more">Show More...</string>
     <string name="title_records">Records</string>
 

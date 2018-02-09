@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:padding="@dimen/list_empty_padding"
-                    android:text="@string/label_list_empty"
+                    android:text="@string/label_list_records_empty"
                     android:textAllCaps="true" />
             </LinearLayout>
 
