@@ -1,6 +1,9 @@
 package com.phoenix.budget.model
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 /**
@@ -9,8 +12,8 @@ import java.util.*
 @Entity(tableName = "records")
 open class Record() {
     @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString()
 
     @ColumnInfo(name = "user_id")
     var userId: String = ""
@@ -30,43 +33,32 @@ open class Record() {
     @ColumnInfo(name = "note")
     var note: String = ""
 
-    @ColumnInfo(name = "created_on")
-    var createdOn: Date = Date(System.currentTimeMillis())
+    @ColumnInfo(name = "done")
+    var done: Boolean = false
+
+    @ColumnInfo(name = "associated_id")
+    var associatedId: String = ""
+
+    @ColumnInfo(name = "created_for")
+    var createdFor: Date = Date(System.currentTimeMillis())
 
     @ColumnInfo(name = "updated_on")
     var updatedOn: Date = Date(System.currentTimeMillis())
 
-//    @Ignore
-//    constructor(id: Long, userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
-//        this.id = id
-//        this.title = title
-//        this.userId = userId
-//        this.categoryId = categoryId
-//        this.amount = amount
-//        this.isIncome = isIncome
-//        this.note = note
-//        this.createdOn = createdOn
-//        this.updatedOn = updatedOn
-//    }
     @Ignore
-    constructor(userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, createdOn: Date, updatedOn: Date):this() {
-        this.id = id
+    constructor(userId: String, title: String, categoryId: Int, amount: Double, isIncome: Boolean, note: String, done: Boolean, associatedId: String, createdFor: Date, updatedOn: Date):this() {
         this.title = title
         this.userId = userId
         this.categoryId = categoryId
         this.amount = amount
         this.isIncome = isIncome
         this.note = note
-        this.createdOn = createdOn
+        this.done = done
+        this.associatedId = associatedId
+        this.createdFor = createdFor
         this.updatedOn = updatedOn
     }
-//
-//    @Ignore
-//    constructor(userId: String, isIncome: Boolean):this(){
-//        this.userId = userId
-//        this.isIncome = isIncome
-//    }
 
-    fun isReminder(): Boolean = createdOn.after(Date(System.currentTimeMillis()))
+    fun isReminder(): Boolean = createdFor.after(Date(System.currentTimeMillis()))
 
 }

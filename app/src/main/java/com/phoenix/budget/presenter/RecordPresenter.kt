@@ -21,13 +21,13 @@ class RecordPresenter(thisRecord: RecordCallback) {
 
     fun loadRecentRecords(limit: Int) {
         if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findAllRecords(System.currentTimeMillis())
+            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
 
         } else {
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findAllRecords(System.currentTimeMillis(), limit)
+            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis(), limit)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
@@ -37,13 +37,13 @@ class RecordPresenter(thisRecord: RecordCallback) {
 
     fun loadReminders(limit: Int) {
         if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findAllReminders(System.currentTimeMillis())
+            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
 
         } else {
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findAllReminders(System.currentTimeMillis(), limit)
+            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis(), limit)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
@@ -53,12 +53,12 @@ class RecordPresenter(thisRecord: RecordCallback) {
 
     fun loadRecordsByCategoryId(categoryId: Int, limit: Int) {
         if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findRecordsByCategoryId(categoryId)
+            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
         }else{
-            compositeDisposable.add(BudgetApp.database.RecordsDao().findRecordsByCategoryId(categoryId, limit)
+            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId, limit)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
@@ -68,7 +68,7 @@ class RecordPresenter(thisRecord: RecordCallback) {
     fun removeDashboardRecentRecord(record: Record) {
         Single.create(SingleOnSubscribe<Int> { emitter ->
             try {
-                val ids = BudgetApp.database.RecordsDao().deleteRecord(record)
+                val ids = BudgetApp.database.recordsDao().deleteRecord(record)
                 emitter.onSuccess(ids)
             } catch (t: Throwable) {
                 emitter.onError(t)
@@ -87,11 +87,11 @@ class RecordPresenter(thisRecord: RecordCallback) {
     }
 
     fun removeDashboardReminder(record: Record) {
-        record.createdOn = Date(System.currentTimeMillis())
+        record.createdFor = Date(System.currentTimeMillis())
         record.updatedOn = Date(System.currentTimeMillis())
         Single.create(SingleOnSubscribe<Int> { emitter ->
             try {
-                val ids = BudgetApp.database.RecordsDao().updateRecord(record)
+                val ids = BudgetApp.database.recordsDao().updateRecord(record)
                 emitter.onSuccess(ids)
             } catch (t: Throwable) {
                 emitter.onError(t)

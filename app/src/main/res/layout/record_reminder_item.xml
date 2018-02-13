@@ -40,7 +40,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="@{StringUtils.getDayfrom(report.createdOn)}"
+                android:text="@{StringUtils.getDayfrom(report.createdFor)}"
                 android:textColor="@color/color_date_reminder_day"
                 android:textSize="@dimen/reminder_date_day_size"
                 android:textStyle="bold" />
@@ -54,7 +54,7 @@
                 android:background="@color/color_date_reminder_month_bg"
                 android:gravity="center"
                 android:padding="2dp"
-                android:text="@{StringUtils.getMonthfrom(report.createdOn)}"
+                android:text="@{StringUtils.getMonthfrom(report.createdFor)}"
                 android:textColor="@color/color_date_reminder_month"
                 android:textSize="@dimen/reminder_date_month_size" />
         </RelativeLayout>

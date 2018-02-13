@@ -7,6 +7,7 @@ import com.phoenix.budget.model.Category
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.dao.CategoryDao
 import com.phoenix.budget.model.dao.RecordsDao
+import com.phoenix.budget.model.dao.RecurringRecordDao
 import com.phoenix.budget.utils.Converter
 
 /**
@@ -16,5 +17,6 @@ import com.phoenix.budget.utils.Converter
 @TypeConverters(Converter::class)
 abstract class BudgetDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
-    abstract fun RecordsDao(): RecordsDao
+    abstract fun recordsDao(): RecordsDao
+    abstract fun recurringRecordsDao(): RecurringRecordDao
 }

@@ -129,6 +129,12 @@
                     android:maxLines="3"
                     android:padding="@dimen/record_padding"
                     android:text="@{categorizedRecord.note}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/border_width"
+                    android:background="@color/color_border" />
+
             </LinearLayout>
         </ScrollView>
 

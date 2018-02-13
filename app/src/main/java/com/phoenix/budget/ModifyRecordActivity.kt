@@ -9,33 +9,36 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.phoenix.budget.databinding.ActivityModifyRecordBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
-import com.phoenix.budget.presenter.ModifyRecordPresenter
+import com.phoenix.budget.model.viewmodel.ModelResponse
+import com.phoenix.budget.model.viewmodel.ModifyRecordViewModel
 import com.phoenix.budget.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
+class ModifyRecordActivity : AppCompatActivity() {
     lateinit var binding: ActivityModifyRecordBinding
-    lateinit var presenter: ModifyRecordPresenter
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
     lateinit var menu: PopMenuItemType
-    var hasSaved = false;
+    var hasSaved = false
+    lateinit var viewModel:ModifyRecordViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_modify_record)
-        presenter = ModifyRecordPresenter(this)
-        binding.presenter = presenter
         setUpUI()
-        presenter.setCategorizedRecord(intent.getStringExtra(RECORD_ID), intent.getBooleanExtra(IS_INCOME, false))
+        viewModel.response().observe(this, android.arch.lifecycle.Observer<ModelResponse> {
+            response -> onBindRecord(response)
+        })
+        viewModel.setCategorizedRecord(intent.getStringExtra(RECORD_ID),
+                intent.getBooleanExtra(IS_INCOME, false),
+                menu == PopMenuItemType.RecurringExpense || menu == PopMenuItemType.RecurringIncome)
     }
 
     private fun setUpUI() {
@@ -44,13 +47,13 @@ class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
         pickDate.setOnClickListener({ onSelectDate() })
 
         RxTextView.afterTextChangeEvents(binding.editTitle)
-                .subscribe { textChangeEvent -> presenter.categorizedRecord.title = textChangeEvent.editable().toString() }
+                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().title = textChangeEvent.editable().toString() }
 
         RxTextView.afterTextChangeEvents(binding.editAmount)
-                .subscribe { textChangeEvent -> presenter.categorizedRecord.amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
+                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
 
         RxTextView.afterTextChangeEvents(binding.editNote)
-                .subscribe { textChangeEvent -> presenter.categorizedRecord.note = textChangeEvent.editable().toString() }
+                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().note = textChangeEvent.editable().toString() }
     }
 
 
@@ -90,7 +93,7 @@ class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
         val myFormat = "dd/MM/yyyy hh:mm" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         pickDate.text = sdf.format(cal.getTime())
-        presenter.categorizedRecord.createdOn = Date(cal.timeInMillis)
+        viewModel.editableCategorizedRecord().createdFor = Date(cal.timeInMillis)
     }
 
     private fun configureToolBar() {
@@ -100,27 +103,28 @@ class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    override fun showError(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
+    private fun onBindRecord(modelResponse: ModelResponse?) {
+        when(modelResponse?.status){
+            ModelResponse.Loading ->{
 
-    override fun onBindRecord(categorizedRecord: CategorizedRecord) {
-        binding.categorizedRecord = categorizedRecord
-        binding.categoryView.setCategorizedReport(categorizedRecord)
-        binding.executePendingBindings()
-    }
+            }
+            ModelResponse.Error ->{
 
-    override fun closeRecord() {
-        finish()
-    }
-
-    override fun addAnotherRecord() {
-        presenter.setCategorizedRecord("", intent.getBooleanExtra(IS_INCOME, false))
-    }
-
-    override fun onDestroy() {
-        presenter.cleanUp()
-        super.onDestroy()
+            }
+            ModelResponse.Success ->{
+                val categorizedRecord = modelResponse.value as CategorizedRecord
+                binding.categorizedRecord = categorizedRecord
+                binding.categoryView.setCategorizedReport(categorizedRecord)
+                binding.executePendingBindings()
+            }
+            ModelResponse.ACTION_1 ->{//save
+                validateResult()
+                finish()
+            }
+            ModelResponse.ACTION_2 ->{//add another
+                viewModel.openNewRecord()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -132,9 +136,7 @@ class ModifyRecordActivity : AppCompatActivity(), ModifyRecordCallback {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_ok -> {
-                presenter.save()
-                validateResult()
-                finish()
+                viewModel.save(false)
                 return true
             }
             android.R.id.home -> {
