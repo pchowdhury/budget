@@ -32,33 +32,96 @@ android {
     }
 }
 
+
 ext.roomVersion = '1.0.0-alpha9'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+//
+//    // RxKotlin and RxAndroid
+//    compile "io.reactivex.rxjava2:rxkotlin:2.0.0"
+//    compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+//    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
+//    // alternatively, just ViewModel
+//    implementation "android.arch.lifecycle:viewmodel:1.1.0"
+//
+//    compile 'com.android.support:cardview-v7:26.1.0'
+//
+//    compile "android.arch.lifecycle:extensions:1.1.0"
+//    kapt "android.arch.lifecycle:compiler:1.1.0"
+
+//SUPPORT LIBRARY
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
+
+//RECYCLER VIEW
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    kapt 'com.android.databinding:compiler:3.0.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+//ANNOTATION SUPPORT LIBRARY
+    implementation 'com.android.support:support-annotations:26.1.0'
+
+//DESIGN SUPPORT LIBRARY
+    implementation 'com.android.support:design:26.1.0'
+
+//CONSTRAINT LAYOUT
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
+
+//KOTLIN
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+//RX JAVA & ANDROID
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//    implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
+
+//RX BINDING
+//    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+//    implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
+//    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+//    implementation 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
+//    implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
+
+    //    // RxKotlin and RxAndroid
+    implementation "io.reactivex.rxjava2:rxkotlin:2.0.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation 'com.jakewharton.rxbinding:rxbinding:1.0.0'
+
+////LEAK CANARY
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+//    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+//LIFE CYCLE EXTENSIONS
+    implementation "android.arch.lifecycle:extensions:1.0.0-alpha9-1"
+
+//LIFE CYCLE JAVA 8
+    implementation "android.arch.lifecycle:common-java8:1.0.0-beta1"
+    implementation "android.arch.lifecycle:runtime:1.0.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha9-1"
+
+////LIVE DATA BACKGROUND TEST
+//    testImplementation "android.arch.core:core-testing:1.0.0-alpha9-1"
+//
+////LIVE DATA WITH REACTIVE STREAMS
+//    implementation "android.arch.lifecycle:reactivestreams:1.0.0-alpha9-1"
+
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
 
-    // RxKotlin and RxAndroid
-    compile "io.reactivex.rxjava2:rxkotlin:2.0.0"
-    compile "io.reactivex.rxjava2:rxandroid:2.0.1"
-    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
-    // alternatively, just ViewModel
-    implementation "android.arch.lifecycle:viewmodel:1.1.0"
+////ROOM
+//    implementation "android.arch.persistence.room:runtime:1.0.0-alpha9-1"
+//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha9-1"
+//
+////ROOM TEST MIGRATION
+//    testImplementation "android.arch.persistence.room:testing:1.0.0-alpha9-1"
+//
+////ROOM RxJAVA
+//    implementation "android.arch.persistence.room:rxjava2:1.0.0-alpha9-1"
 
-    compile 'com.android.support:cardview-v7:26.1.0'
-
-    compile "android.arch.lifecycle:extensions:1.1.0"
-    kapt "android.arch.lifecycle:compiler:1.1.0"
+//cardview
+    implementation 'com.android.support:cardview-v7:26.1.0'
+//databinding
+    kapt 'com.android.databinding:compiler:3.0.1'
 }
+

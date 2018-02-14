@@ -11,8 +11,8 @@
             type="com.phoenix.budget.model.Record" />
 
         <variable
-            name="presenter"
-            type="com.phoenix.budget.presenter.RecordPresenter" />
+            name="recordCallback"
+            type="com.phoenix.budget.RecordCallback" />
     </data>
 
     <RelativeLayout
@@ -111,6 +111,6 @@
             android:tint="@color/colorAccent"
             bind:checkable="@{true}"
             bind:report="@{report}"
-            bind:presenter="@{presenter}" />
+            bind:recordCallback="@{recordCallback}" />
     </RelativeLayout>
 </layout>

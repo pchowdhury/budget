@@ -26,7 +26,7 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            presenter.removeDashboardRecentRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
+//            presenter.removeDashboardRecentRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
         }
     }
 
@@ -36,11 +36,11 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         setSupportActionBar(toolbar)
         configureToolBar()
         presenter = RecordPresenter(this)
-        binding.presenter = presenter
+//        binding.presenter = presenter
         binding.contentReports?.recycleView?.layoutManager = LinearLayoutManager(this)
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView( binding.contentReports?.recycleView)
-        loadRecords()
+//        loadRecords()
     }
 
     private fun configureToolBar() {
@@ -50,50 +50,50 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    override fun loadRecords() {
-        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
-        val isRestricted = intent.getBooleanExtra(INTENT_REQUEST_IS_RESTRICTED, false)
-
-        if (categoryId == -1) {
-            presenter.loadRecentRecords(-1)
-        } else {
-            presenter.loadRecordsByCategoryId(categoryId, if (isRestricted) DashboardCardView.MAX_ROWS else -1)
-        }
-    }
-
-    override fun loadReminders() {
-    }
-
-
+//    override fun loadRecords() {
+//        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
+//        val isRestricted = intent.getBooleanExtra(INTENT_REQUEST_IS_RESTRICTED, false)
+//
+//        if (categoryId == -1) {
+//            presenter.loadRecentRecords(-1)
+//        } else {
+//            presenter.loadRecordsByCategoryId(categoryId, if (isRestricted) DashboardCardView.MAX_ROWS else -1)
+//        }
+//    }
+//
+//    override fun loadReminders() {
+//    }
+//
+//
     override fun showReport(categoryId: Int) {
     }
-
-    override fun updateRecentRecords(list: MutableList<Record>) {
-        binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, presenter, list)
-    }
-
-    override fun updateReminders(list: MutableList<Record>) {
-    }
-
-    override fun showError(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_dashboard, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//
+//    override fun updateRecentRecords(list: MutableList<Record>) {
+//        binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, presenter, list)
+//    }
+//
+//    override fun updateReminders(list: MutableList<Record>) {
+//    }
+//
+//    override fun showError(text: String) {
+//        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+//    }
+//
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.menu_dashboard, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                finish()
+//                return true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     companion object {
         @JvmStatic

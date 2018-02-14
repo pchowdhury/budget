@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.phoenix.budget.R
+import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.RecordPresenter
 import kotlinx.android.synthetic.main.dashboard_card_view.view.*
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.dashboard_card_view.view.*
 open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
 
-    lateinit var presenter: RecordPresenter
+    lateinit var recordCallback: RecordCallback
 
     var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -54,11 +55,11 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
     }
 
     fun onMoreClick() {
-        presenter.recordCallback.showReport(-1)
+        recordCallback.showReport(-1)
     }
 
     companion object {
         @JvmStatic
-        val MAX_ROWS = 3
+        val MAX_ROWS = 13
     }
 }

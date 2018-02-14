@@ -15,16 +15,16 @@ interface RecordsDao {
     @Query("SELECT records.*, category.id as category_id, category.title as category_title, category.created_on as category_created_on, category.updated_on as category_updated_on FROM records LEFT JOIN category ON records.category_id = category.id AND records.id = :id")
     fun findCategorizedRecordById(id: String): Flowable<CategorizedRecord>
 
-
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC")
+    fun findAllRecords(): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE created_for < :time ORDER BY created_for DESC")
-    fun findAllRecords(time: Long): Flowable<MutableList<Record>>
+    @Query("SELECT * FROM records WHERE done = :isReminder ORDER BY created_for DESC LIMIT :limit")
+    fun findLimitedRecords(isReminder:Boolean, limit:Int): Flowable<MutableList<Record>>
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE created_for < :time ORDER BY created_for DESC LIMIT :limit")
-    fun findAllRecords(time: Long, limit:Int): Flowable<MutableList<Record>>
+
+
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE created_for >  :time ORDER BY created_for ASC")

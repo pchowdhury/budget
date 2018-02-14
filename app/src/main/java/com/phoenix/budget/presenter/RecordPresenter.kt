@@ -19,100 +19,100 @@ class RecordPresenter(thisRecord: RecordCallback) {
 
     val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun loadRecentRecords(limit: Int) {
-        if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis())
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
-
-        } else {
-            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis(), limit)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
-
-        }
-    }
-
-    fun loadReminders(limit: Int) {
-        if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis())
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
-
-        } else {
-            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis(), limit)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
-
-        }
-    }
-
-    fun loadRecordsByCategoryId(categoryId: Int, limit: Int) {
-        if (limit == -1) {
-            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
-        }else{
-            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId, limit)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
-        }
-    }
-
-    fun removeDashboardRecentRecord(record: Record) {
-        Single.create(SingleOnSubscribe<Int> { emitter ->
-            try {
-                val ids = BudgetApp.database.recordsDao().deleteRecord(record)
-                emitter.onSuccess(ids)
-            } catch (t: Throwable) {
-                emitter.onError(t)
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(object : DisposableSingleObserver<Int>() {
-                    override fun onSuccess(ids: Int) {
-                        recordCallback.loadRecords()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        showError(e)
-                    }
-                })
-    }
-
-    fun removeDashboardReminder(record: Record) {
-        record.createdFor = Date(System.currentTimeMillis())
-        record.updatedOn = Date(System.currentTimeMillis())
-        Single.create(SingleOnSubscribe<Int> { emitter ->
-            try {
-                val ids = BudgetApp.database.recordsDao().updateRecord(record)
-                emitter.onSuccess(ids)
-            } catch (t: Throwable) {
-                emitter.onError(t)
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(object : DisposableSingleObserver<Int>() {
-                    override fun onSuccess(ids: Int) {
-                        recordCallback.loadReminders()
-                        recordCallback.loadRecords()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        showError(e)
-                    }
-                })
-    }
-
-    fun showError(t: Throwable) {
-
-    }
+//    fun loadRecentRecords(limit: Int) {
+//        if (limit == -1) {
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis())
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
+//
+//        } else {
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findAllRecords(System.currentTimeMillis(), limit)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
+//
+//        }
+//    }
+//
+//    fun loadReminders(limit: Int) {
+//        if (limit == -1) {
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis())
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
+//
+//        } else {
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findAllReminders(System.currentTimeMillis(), limit)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateReminders(list) }, { error -> showError(error) }))
+//
+//        }
+//    }
+//
+//    fun loadRecordsByCategoryId(categoryId: Int, limit: Int) {
+//        if (limit == -1) {
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
+//        }else{
+//            compositeDisposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId, limit)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ list -> recordCallback.updateRecentRecords(list) }, { error -> showError(error) }))
+//        }
+//    }
+//
+//    fun removeDashboardRecentRecord(record: Record) {
+//        Single.create(SingleOnSubscribe<Int> { emitter ->
+//            try {
+//                val ids = BudgetApp.database.recordsDao().deleteRecord(record)
+//                emitter.onSuccess(ids)
+//            } catch (t: Throwable) {
+//                emitter.onError(t)
+//            }
+//        }).observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribeWith(object : DisposableSingleObserver<Int>() {
+//                    override fun onSuccess(ids: Int) {
+//                        recordCallback.loadRecords()
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//                        showError(e)
+//                    }
+//                })
+//    }
+//
+//    fun removeDashboardReminder(record: Record) {
+//        record.createdFor = Date(System.currentTimeMillis())
+//        record.updatedOn = Date(System.currentTimeMillis())
+//        Single.create(SingleOnSubscribe<Int> { emitter ->
+//            try {
+//                val ids = BudgetApp.database.recordsDao().updateRecord(record)
+//                emitter.onSuccess(ids)
+//            } catch (t: Throwable) {
+//                emitter.onError(t)
+//            }
+//        }).observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribeWith(object : DisposableSingleObserver<Int>() {
+//                    override fun onSuccess(ids: Int) {
+//                        recordCallback.loadReminders()
+//                        recordCallback.loadRecords()
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//                        showError(e)
+//                    }
+//                })
+//    }
+//
+//    fun showError(t: Throwable) {
+//
+//    }
 
     fun getIconId(catogoryId: Int): Int = recordCallback.getIconId(catogoryId)
 

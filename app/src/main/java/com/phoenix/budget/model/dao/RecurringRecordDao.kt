@@ -16,19 +16,18 @@ interface RecurringRecordDao {
     @Query("SELECT recurring_records.*, category.id as category_id, category.title as category_title, category.created_on as category_created_on, category.updated_on as category_updated_on FROM recurring_records LEFT JOIN category ON recurring_records.category_id = category.id AND recurring_records.id = :id")
     fun findCategorizedRecordById(id: String): Flowable<CategorizedRecord>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM recurring_records ORDER BY created_for ASC")
+    fun findAllRecurringRecords(): Flowable<MutableList<RecurringRecord>>
 
-//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-//    @Query("SELECT * FROM recurring_records WHERE created_for < :time ORDER BY created_for ASC")
-//    fun findAllRecurringRecords(time: Long): Flowable<MutableList<RecurringRecord>>
-//
-//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-//    @Query("SELECT * FROM records WHERE created_for < :time ORDER BY created_for DESC LIMIT :limit")
-//    fun findAllRecurringRecords(time: Long, limit:Int): Flowable<MutableList<RecurringRecord>>
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for ASC LIMIT :limit")
+    fun findLimitedRecurringRecords(limit:Int): Flowable<MutableList<RecurringRecord>>
 //
 //    //    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM recurring_records where id = :id")
-    fun findRecurringRecordById(id: String): Flowable< RecurringRecord>
+//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+//    @Query("SELECT * FROM recurring_records where id = :id")
+//    fun findRecurringRecordById(id: String): Flowable< RecurringRecord>
 
 //    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
 //    @Query("SELECT records.*, category.id as category_id, category.title as category_title, category.created_for as category_created_for, category.updated_on as category_updated_on FROM records LEFT JOIN category ON records.category_id = category.id")

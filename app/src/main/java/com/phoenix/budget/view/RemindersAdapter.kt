@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.phoenix.budget.BR
+import com.phoenix.budget.BR.presenter
 import com.phoenix.budget.R
+import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.RecordPresenter
 
@@ -17,12 +19,12 @@ import com.phoenix.budget.presenter.RecordPresenter
  */
 
 
-class RemindersAdapter(val context: Context, val presenter: RecordPresenter, val reports: MutableList<Record>) : RecyclerView.Adapter<RemindersAdapter.RecordViewHolder>() {
+class RemindersAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RemindersAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
             binding.setVariable(BR.report, item)
-            binding.setVariable(BR.presenter, presenter)
+            binding.setVariable(BR.recordCallback, recordCallback)
             binding.executePendingBindings()
         }
     }

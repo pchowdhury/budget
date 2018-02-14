@@ -5,12 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.phoenix.budget.RecordsActivity">
 
-    <data>
-        <variable
-            name="presenter"
-            type="com.phoenix.budget.presenter.RecordPresenter" />
-    </data>
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,7 +39,7 @@
         <include
             android:id="@+id/content_reports"
             layout="@layout/content_reports"
-            bind:presenter="@{presenter}"/>
+           />
 
         <FrameLayout
             android:id="@+id/menu_container"

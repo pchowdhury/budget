@@ -5,11 +5,14 @@
     tools:context="com.phoenix.budget.DashboardActivity">
 
     <data>
-
         <variable
-            name="presenter"
-            type="com.phoenix.budget.presenter.RecordPresenter" />
+            name="viewModel"
+            type="com.phoenix.budget.model.viewmodel.DashboardViewModel" />
+        <variable
+            name="recordCallback"
+            type="com.phoenix.budget.RecordCallback" />
     </data>
+
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

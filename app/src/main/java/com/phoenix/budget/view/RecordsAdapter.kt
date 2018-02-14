@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.phoenix.budget.BR
 import com.phoenix.budget.R
+import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.presenter.RecordPresenter
 
@@ -18,22 +19,24 @@ import com.phoenix.budget.presenter.RecordPresenter
  * Created by Pushpan on 05/02/18.
  */
 
-@BindingAdapter("bind:report", "bind:presenter", "bind:checkable")
-fun setImageIcon(view: ImageView, record: Record, presenter: RecordPresenter, checkable: Boolean) {
+@BindingAdapter("bind:report", "bind:recordCallback", "bind:checkable")
+fun setImageIcon(view: ImageView, record: Record, recordCallback: RecordCallback, checkable: Boolean) {
     if (checkable) {
-        view.setOnClickListener { presenter.removeDashboardReminder(record) }
+        view.setOnClickListener {
+//            presenter.removeDashboardReminder(record)
+        }
     } else {
-        view.setImageResource(presenter.getIconId(record.categoryId))
-        view.setOnClickListener { presenter.recordCallback.showReport(record.categoryId) }
+        view.setImageResource(recordCallback.getIconId(record.categoryId))
+        view.setOnClickListener { recordCallback.showReport(record.categoryId) }
     }
 }
 
-class RecordsAdapter(val context: Context, val presenter: RecordPresenter, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
+class RecordsAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
             binding.setVariable(BR.report, item)
-            binding.setVariable(BR.presenter, presenter)
+            binding.setVariable(BR.recordCallback, recordCallback)
             binding.executePendingBindings()
         }
     }

@@ -51,7 +51,7 @@ class ModifyRecordViewModel : ViewModel() {
 
     fun response(): MutableLiveData<ModelResponse> = response
 
-    fun editableCategorizedRecord(): CategorizedRecord = response.value?.value as CategorizedRecord
+    fun editableCategorizedRecord(): CategorizedRecord = response.value!!.value as CategorizedRecord
 
     private fun loading() {
         response.value = ModelResponse.loading()
@@ -88,7 +88,7 @@ class ModifyRecordViewModel : ViewModel() {
         if (isRecurring) {
             return Single.create(SingleOnSubscribe<Long> { emitter ->
                 try {
-                    val ids = BudgetApp.database.recordsDao().insertRecord((response().value as CategorizedRecord).getRecord())
+                    val ids = BudgetApp.database.recurringRecordsDao().insertRecurringRecord((response().value!!.value as CategorizedRecord).getRecurringRecord())
                     emitter.onSuccess(ids)
                 } catch (t: Throwable) {
                     emitter.onError(t)
@@ -108,7 +108,7 @@ class ModifyRecordViewModel : ViewModel() {
         } else {
             return Single.create(SingleOnSubscribe<Long> { emitter ->
                 try {
-                    val ids = BudgetApp.database.recurringRecordsDao().insertRecurringRecord((response().value as CategorizedRecord).getRecurringRecord())
+                    val ids = BudgetApp.database.recordsDao().insertRecord((response().value!!.value as CategorizedRecord).getRecord())
                     emitter.onSuccess(ids)
                 } catch (t: Throwable) {
                     emitter.onError(t)

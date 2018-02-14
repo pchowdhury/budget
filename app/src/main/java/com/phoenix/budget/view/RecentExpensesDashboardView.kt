@@ -15,12 +15,12 @@ class RecentExpensesDashboardView @kotlin.jvm.JvmOverloads constructor(
 
 
     override fun setCardList(list: MutableList<Record>) {
-        recycleView.adapter = RecordsAdapter(context, presenter, list)
+        recycleView.adapter = RecordsAdapter(context, recordCallback, list)
         listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onSwipeRemove(position: Int){
-        presenter.removeDashboardRecentRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(position))
+//        recordCallback.removeDashboardRecentRecord((recycleView.adapter as RecordsAdapter).getDataAtPosition(position))
     }
 }
 

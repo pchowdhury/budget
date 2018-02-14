@@ -3,6 +3,7 @@ package com.phoenix.budget
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -27,11 +28,12 @@ class ModifyRecordActivity : AppCompatActivity() {
     var cal = Calendar.getInstance()
     lateinit var menu: PopMenuItemType
     var hasSaved = false
-    lateinit var viewModel:ModifyRecordViewModel
+    var viewModel:ModifyRecordViewModel = ModifyRecordViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_modify_record)
+        viewModel = ViewModelProviders.of(this).get(ModifyRecordViewModel::class.java)
         setUpUI()
         viewModel.response().observe(this, android.arch.lifecycle.Observer<ModelResponse> {
             response -> onBindRecord(response)
@@ -45,15 +47,6 @@ class ModifyRecordActivity : AppCompatActivity() {
         menu = PopMenuItemType.values()[intent.getIntExtra(MODE, 0)]
         configureToolBar()
         pickDate.setOnClickListener({ onSelectDate() })
-
-        RxTextView.afterTextChangeEvents(binding.editTitle)
-                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().title = textChangeEvent.editable().toString() }
-
-        RxTextView.afterTextChangeEvents(binding.editAmount)
-                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
-
-        RxTextView.afterTextChangeEvents(binding.editNote)
-                .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().note = textChangeEvent.editable().toString() }
     }
 
 
@@ -109,19 +102,29 @@ class ModifyRecordActivity : AppCompatActivity() {
 
             }
             ModelResponse.Error ->{
-
+                viewModel.openNewRecord()
             }
             ModelResponse.Success ->{
                 val categorizedRecord = modelResponse.value as CategorizedRecord
                 binding.categorizedRecord = categorizedRecord
                 binding.categoryView.setCategorizedReport(categorizedRecord)
                 binding.executePendingBindings()
+                RxTextView.afterTextChangeEvents(binding.editTitle)
+                        .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().title = textChangeEvent.editable().toString() }
+
+                RxTextView.afterTextChangeEvents(binding.editAmount)
+                        .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
+
+                RxTextView.afterTextChangeEvents(binding.editNote)
+                        .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().note = textChangeEvent.editable().toString() }
             }
             ModelResponse.ACTION_1 ->{//save
+                hasSaved = true
                 validateResult()
                 finish()
             }
             ModelResponse.ACTION_2 ->{//add another
+                hasSaved = true
                 viewModel.openNewRecord()
             }
         }

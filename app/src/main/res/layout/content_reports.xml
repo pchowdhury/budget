@@ -5,12 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.phoenix.budget.DashboardActivity">
 
-    <data>
-        <variable
-            name="presenter"
-            type="com.phoenix.budget.presenter.RecordPresenter" />
-    </data>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

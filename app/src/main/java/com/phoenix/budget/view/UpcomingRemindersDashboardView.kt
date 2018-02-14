@@ -15,7 +15,7 @@ class UpcomingRemindersDashboardView @kotlin.jvm.JvmOverloads constructor(
 
 
     override fun setCardList(list: MutableList<Record>) {
-        recycleView.adapter = RemindersAdapter(context, presenter, list)
+        recycleView.adapter = RemindersAdapter(context, recordCallback, list)
         listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 

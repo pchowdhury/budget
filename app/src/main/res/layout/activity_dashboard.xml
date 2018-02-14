@@ -7,8 +7,11 @@
 
     <data>
         <variable
-            name="presenter"
-            type="com.phoenix.budget.presenter.RecordPresenter" />
+            name="viewModel"
+            type="com.phoenix.budget.model.viewmodel.DashboardViewModel" />
+        <variable
+            name="recordCallback"
+            type="com.phoenix.budget.RecordCallback" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -44,7 +47,7 @@
         <include
             android:id="@+id/content_dashboard"
             layout="@layout/content_dashboard"
-            bind:presenter="@{presenter}"/>
+            bind:recordCallback="@{recordCallback}"/>
 
         <FrameLayout
             android:id="@+id/menu_container"

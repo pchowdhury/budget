@@ -1,24 +1,25 @@
 package com.phoenix.budget
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityDashboardBinding
 import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.RecordPresenter
-import com.phoenix.budget.view.DashboardCardView
+import com.phoenix.budget.model.viewmodel.DashboardViewModel
+import com.phoenix.budget.model.viewmodel.ModelResponse
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     lateinit var binding: ActivityDashboardBinding
-    lateinit var presenter: RecordPresenter
+    lateinit var viewModel: DashboardViewModel
     val menuFragment = MenuFragment()
 
 
@@ -29,45 +30,54 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
-        presenter = RecordPresenter(this)
-        binding.presenter = presenter
+
+        viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> {
+            response -> onBindRecentRecords(response)
+        })
+        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> {
+            response -> onBindReminderRecords(response)
+        })
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
-        loadDashboard()
+        viewModel.loadData(false)
     }
 
-    private fun loadDashboard() {
-        binding.contentDashboard?.cardViewRecentRecords?.presenter = presenter
-        binding.contentDashboard?.cardViewUpcomingReminders?.presenter = presenter
-        loadDashboardRecords()
+    private fun onBindReminderRecords(modelResponse: ModelResponse?) {
+        when(modelResponse?.status){
+            ModelResponse.Loading ->{
+
+            }
+            ModelResponse.Error ->{
+
+            }
+            ModelResponse.Success ->{
+                val list = modelResponse.value as MutableList<Record>
+                binding.contentDashboard?.cardViewUpcomingReminders?.recordCallback = this
+                binding.executePendingBindings()
+                binding.contentDashboard?.cardViewUpcomingReminders?.setCardList(list)
+            }
+        }
     }
 
-    fun loadDashboardRecords(){
-        loadRecords()
-        loadReminders()
-    }
+    private fun onBindRecentRecords(modelResponse: ModelResponse?) {
+        when(modelResponse?.status){
+            ModelResponse.Loading ->{
 
-    override fun updateRecentRecords(list: MutableList<Record>) {
-        binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
-    }
+            }
+            ModelResponse.Error ->{
 
-    override fun updateReminders(list: MutableList<Record>) {
-        binding.contentDashboard?.cardViewUpcomingReminders?.setCardList(list)
-    }
-
-    override fun loadRecords() {
-        presenter.loadRecentRecords(DashboardCardView.MAX_ROWS)
-    }
-
-    override fun loadReminders() {
-        presenter.loadReminders(DashboardCardView.MAX_ROWS)
+            }
+            ModelResponse.Success ->{
+                val list = modelResponse.value as MutableList<Record>
+                binding.contentDashboard?.cardViewRecentRecords?.recordCallback = this
+                binding.executePendingBindings()
+                binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
+            }
+        }
     }
 
     override fun showReport(categoryId: Int) {
         starViewRecords(categoryId)
-    }
-
-    override fun showError(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,7 +107,7 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (resultCode) {
-                REQUEST_ADD ->  loadDashboardRecords()
+                REQUEST_ADD ->  viewModel.loadData(true)
             }
         }
     }
