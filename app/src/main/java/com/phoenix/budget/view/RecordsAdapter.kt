@@ -12,7 +12,6 @@ import com.phoenix.budget.BR
 import com.phoenix.budget.R
 import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.RecordPresenter
 
 
 /**
