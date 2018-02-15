@@ -39,6 +39,10 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
             response -> onBindReminderRecords(response)
         })
 
+        viewModel.addRemindersResponse().observe(this, Observer<ModelResponse>{
+            response -> onFinishUpdatingReminders(response)
+        })
+
         viewModel.updateRemindersResponse().observe(this, Observer<ModelResponse>{
             response -> onFinishUpdatingReminders(response)
         })
@@ -97,6 +101,10 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
 
     override fun showReport(categoryId: Int) {
         starViewRecords(categoryId)
+    }
+
+    override fun markReminderDone(record: Record) {
+        viewModel.markReminderDone(record)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

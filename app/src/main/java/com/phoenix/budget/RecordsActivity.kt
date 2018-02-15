@@ -50,7 +50,11 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-//    override fun loadRecords() {
+    override fun markReminderDone(record: Record) {
+    }
+
+
+    //    override fun loadRecords() {
 //        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
 //        val isRestricted = intent.getBooleanExtra(INTENT_REQUEST_IS_RESTRICTED, false)
 //

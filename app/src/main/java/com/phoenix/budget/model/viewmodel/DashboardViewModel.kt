@@ -7,8 +7,11 @@ import com.phoenix.budget.model.RecurringRecord
 import com.phoenix.budget.persistence.BudgetApp
 import com.phoenix.budget.utils.Converter
 import com.phoenix.budget.view.DashboardCardView
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
@@ -20,6 +23,7 @@ class DashboardViewModel : ViewModel() {
     private var shouldLoadData = true
     private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+    private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private var disposable = CompositeDisposable()
     private val calendar = Calendar.getInstance()
@@ -65,7 +69,7 @@ class DashboardViewModel : ViewModel() {
         val nextUpdateTime = calendar.timeInMillis
 
         BudgetApp.database.recurringRecordsDao().findAllRecurringRecordsNeedsUpdate(timeNow)
-                .doOnSubscribe { _ -> loading(updateRemindersResponse) }
+                .doOnSubscribe { _ -> loading(addRemindersResponse) }
                 .subscribeOn(Schedulers.newThread())
                 .map { list -> createRecordsFromReminders(list, timeNow, nextUpdateTime) }
                 .subscribeOn(Schedulers.newThread())
@@ -73,8 +77,8 @@ class DashboardViewModel : ViewModel() {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { r -> updateRemindersResponse.value = ModelResponse.success(r) },
-                        { throwable -> updateRemindersResponse.value = ModelResponse.error(throwable) }
+                        { r -> addRemindersResponse.value = ModelResponse.success(r) },
+                        { throwable -> addRemindersResponse.value = ModelResponse.error(throwable) }
                 )
     }
 
@@ -127,12 +131,55 @@ class DashboardViewModel : ViewModel() {
     }
 
 
+    fun removeDashboardRecentRecord(record: Record) {
+        Single.create(SingleOnSubscribe<Int> { emitter ->
+            try {
+                val ids = BudgetApp.database.recordsDao().deleteRecord(record)
+                emitter.onSuccess(ids)
+            } catch (t: Throwable) {
+                emitter.onError(t)
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableSingleObserver<Int>() {
+                    override fun onSuccess(ids: Int) {
+                        addRemindersResponse.value = ModelResponse.success(null)
+                    }
+                    override fun onError(e: Throwable) {
+                        addRemindersResponse.value = ModelResponse.error(e)
+                    }
+                })
+    }
+
+    fun markReminderDone(record: Record) {
+        record.updatedOn = Date(System.currentTimeMillis())
+        record.done = true
+        Single.create(SingleOnSubscribe<Int> { emitter ->
+            try {
+                val ids = BudgetApp.database.recordsDao().updateRecord(record)
+                emitter.onSuccess(ids)
+            } catch (t: Throwable) {
+                emitter.onError(t)
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableSingleObserver<Int>() {
+                    override fun onSuccess(ids: Int) {
+                        addRemindersResponse.value = ModelResponse.success(null)
+                    }
+                    override fun onError(e: Throwable) {
+                        addRemindersResponse.value = ModelResponse.error(e)
+                    }
+                })
+    }
+
     fun recentRecordsResponse(): MutableLiveData<ModelResponse> = recentRecordsResponse
 
     fun reminderRecordsResponse(): MutableLiveData<ModelResponse> = reminderRecordsResponse
 
-    fun updateRemindersResponse(): MutableLiveData<ModelResponse> = updateRemindersResponse
+    fun addRemindersResponse(): MutableLiveData<ModelResponse> = addRemindersResponse
 
+    fun updateRemindersResponse(): MutableLiveData<ModelResponse> = updateRemindersResponse
 
     private fun loading(response: MutableLiveData<ModelResponse>) {
         response.postValue(ModelResponse.loading())

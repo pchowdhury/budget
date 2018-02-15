@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import com.phoenix.budget.R
 import com.phoenix.budget.RecordCallback
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.RecordPresenter
 import kotlinx.android.synthetic.main.dashboard_card_view.view.*
 
 

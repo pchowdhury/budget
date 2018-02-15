@@ -23,7 +23,7 @@ import com.phoenix.budget.presenter.RecordPresenter
 fun setImageIcon(view: ImageView, record: Record, recordCallback: RecordCallback, checkable: Boolean) {
     if (checkable) {
         view.setOnClickListener {
-//            presenter.removeDashboardReminder(record)
+            recordCallback.markReminderDone(record)
         }
     } else {
         view.setImageResource(recordCallback.getIconId(record.categoryId))
