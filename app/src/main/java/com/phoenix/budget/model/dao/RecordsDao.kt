@@ -16,13 +16,30 @@ interface RecordsDao {
     fun findCategorizedRecordById(id: String): Flowable<CategorizedRecord>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC")
+    @Query("SELECT * FROM records ORDER BY created_for DESC")
     fun findAllRecords(): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = :isReminder ORDER BY created_for DESC LIMIT :limit")
-    fun findLimitedRecords(isReminder:Boolean, limit:Int): Flowable<MutableList<Record>>
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC")
+    fun findRecentRecords(): Flowable<MutableList<Record>>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC")
+    fun findReminderRecords(): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC LIMIT :limit")
+    fun findLimitRecentRecords(limit: Int): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC LIMIT :limit")
+    fun findLimitReminderRecords(limit: Int): Flowable<MutableList<Record>>
+
+//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+//    @Query("SELECT * FROM records WHERE done = :isReminder ORDER BY created_for DESC LIMIT :limit")
+//    fun findLimitedRecords(isReminder:String, limit:Int): Flowable<MutableList<Record>>
+//
+//
 
 
 
@@ -55,6 +72,12 @@ interface RecordsDao {
 
     @Insert(onConflict = REPLACE)
     fun insertRecord(record: Record) : Long
+
+    @Insert(onConflict = REPLACE)
+    fun insertRecords(records: MutableList<Record>) : LongArray
+
+    @Update(onConflict = REPLACE)
+    fun updateRecords(records: MutableList<Record>): Int
 
     @Update(onConflict = REPLACE)
     fun updateRecord(record: Record): Int

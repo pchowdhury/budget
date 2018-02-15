@@ -1,6 +1,8 @@
 package com.phoenix.budget.utils
 
 import android.arch.persistence.room.TypeConverter
+import com.phoenix.budget.model.Record
+import com.phoenix.budget.model.RecurringRecord
 import java.util.*
 
 /**
@@ -38,6 +40,12 @@ class Converter {
         return when (value) {
             true -> 1
             else -> 0
+        }
+    }
+
+    companion object {
+        fun newRecordForRecurringRecord(recuringRecord: RecurringRecord): Record {
+            return Record(recuringRecord.userId, recuringRecord.title, recuringRecord.categoryId, recuringRecord.amount, recuringRecord.isIncome, recuringRecord.note, false, recuringRecord.id, recuringRecord.createdFor, recuringRecord.updatedOn)
         }
     }
 }

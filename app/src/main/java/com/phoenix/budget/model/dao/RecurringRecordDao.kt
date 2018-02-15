@@ -23,6 +23,11 @@ interface RecurringRecordDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for ASC LIMIT :limit")
     fun findLimitedRecurringRecords(limit:Int): Flowable<MutableList<RecurringRecord>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM recurring_records WHERE next_update_on < :time AND next_update_on != 0 ORDER BY created_for ASC")
+    fun findAllRecurringRecordsNeedsUpdate(time: Long): Flowable<MutableList<RecurringRecord>>
+
 //
 //    //    @Query("SELECT * FROM transaction, category where transaction.id = :id AND transaction.category_id = category.category_id")
 //    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

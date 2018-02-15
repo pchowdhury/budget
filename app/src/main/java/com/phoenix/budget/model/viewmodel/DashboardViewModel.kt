@@ -2,11 +2,15 @@ package com.phoenix.budget.model.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.phoenix.budget.model.Record
+import com.phoenix.budget.model.RecurringRecord
 import com.phoenix.budget.persistence.BudgetApp
+import com.phoenix.budget.utils.Converter
 import com.phoenix.budget.view.DashboardCardView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 
 /**
@@ -16,7 +20,9 @@ class DashboardViewModel : ViewModel() {
     private var shouldLoadData = true
     private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+    private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private var disposable = CompositeDisposable()
+    private val calendar = Calendar.getInstance()
 
     fun loadData(forced: Boolean) {
         if (shouldLoadData || forced) {
@@ -28,7 +34,7 @@ class DashboardViewModel : ViewModel() {
 
     private fun loadRecentRecord() {
         disposable.add(
-                BudgetApp.database.recordsDao().findLimitedRecords(false, DashboardCardView.MAX_ROWS)
+                BudgetApp.database.recordsDao().findLimitRecentRecords(DashboardCardView.MAX_ROWS)
                         .doOnSubscribe { _ -> loading(recentRecordsResponse) }
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -41,7 +47,7 @@ class DashboardViewModel : ViewModel() {
 
     private fun loadReminderRecordsRecord() {
         disposable.add(
-                BudgetApp.database.recordsDao().findLimitedRecords(true, DashboardCardView.MAX_ROWS)
+                BudgetApp.database.recordsDao().findLimitReminderRecords(DashboardCardView.MAX_ROWS)
                         .doOnSubscribe { _ -> loading(reminderRecordsResponse) }
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -52,9 +58,80 @@ class DashboardViewModel : ViewModel() {
         )
     }
 
+    fun updateReminders() {
+        val timeNow = System.currentTimeMillis()
+        calendar.timeInMillis = timeNow
+        calendar.add(Calendar.MONTH, 2)
+        val nextUpdateTime = calendar.timeInMillis
+
+        BudgetApp.database.recurringRecordsDao().findAllRecurringRecordsNeedsUpdate(timeNow)
+                .doOnSubscribe { _ -> loading(updateRemindersResponse) }
+                .subscribeOn(Schedulers.newThread())
+                .map { list -> createRecordsFromReminders(list, timeNow, nextUpdateTime) }
+                .subscribeOn(Schedulers.newThread())
+                .doOnNext { list -> BudgetApp.database.recordsDao().insertRecords(list) }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { r -> updateRemindersResponse.value = ModelResponse.success(r) },
+                        { throwable -> updateRemindersResponse.value = ModelResponse.error(throwable) }
+                )
+    }
+
+    private fun createRecordsFromReminders(list: MutableList<RecurringRecord>, timeNow: Long, nextUpdateTime: Long): MutableList<Record> {
+        val insertList: MutableList<Record> = arrayListOf()
+        list.onEach { r -> addToRecords(insertList, r, timeNow, nextUpdateTime) }
+        return insertList
+    }
+
+    private fun addToRecords(recordList: MutableList<Record>, recurringRecord: RecurringRecord, timeNow: Long, nextUpdateTime: Long) {
+        calendar.timeInMillis = recurringRecord.createdFor.time
+        var record: Record?
+        var shouldExit = false
+        while (calendar.timeInMillis in timeNow..nextUpdateTime) {
+            when (recurringRecord.frequency) {
+                RecurringRecord.RepeatOnce -> {
+                    shouldExit = true
+                }
+                RecurringRecord.RepeatWeekly -> {
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                }
+                RecurringRecord.RepeatMonthly -> {
+                    calendar.add(Calendar.MONTH, 1)
+                }
+                RecurringRecord.RepeatQuarterly -> {
+                    calendar.add(Calendar.MONTH, 3)
+                }
+                RecurringRecord.RepeatYearly -> {
+                    calendar.add(Calendar.YEAR, 1)
+                }
+                else -> return
+            }
+
+            record = getNextRecordFor(recurringRecord, calendar.timeInMillis, nextUpdateTime)
+            if (record != null) recordList.add(record) else return
+            if (shouldExit) {
+                return
+            }
+
+        }
+    }
+
+    private fun getNextRecordFor(recurringRecord: RecurringRecord, createFor: Long, nextUpdateTime: Long): Record? {
+        if (createFor <= nextUpdateTime) {
+            val record = Converter.newRecordForRecurringRecord(recurringRecord)
+            record.createdFor = Date(createFor)
+            return record
+        }
+        return null
+    }
+
+
     fun recentRecordsResponse(): MutableLiveData<ModelResponse> = recentRecordsResponse
 
     fun reminderRecordsResponse(): MutableLiveData<ModelResponse> = reminderRecordsResponse
+
+    fun updateRemindersResponse(): MutableLiveData<ModelResponse> = updateRemindersResponse
 
 
     private fun loading(response: MutableLiveData<ModelResponse>) {

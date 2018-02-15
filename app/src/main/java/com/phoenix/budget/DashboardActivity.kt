@@ -38,8 +38,27 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
         viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> {
             response -> onBindReminderRecords(response)
         })
+
+        viewModel.updateRemindersResponse().observe(this, Observer<ModelResponse>{
+            response -> onFinishUpdatingReminders(response)
+        })
+
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
         viewModel.loadData(false)
+    }
+
+    private fun onFinishUpdatingReminders(modelResponse: ModelResponse?) {
+        when(modelResponse?.status){
+            ModelResponse.Loading ->{
+
+            }
+            ModelResponse.Error ->{
+                viewModel.loadData(true)
+            }
+            ModelResponse.Success ->{
+                viewModel.loadData(true)
+            }
+        }
     }
 
     private fun onBindReminderRecords(modelResponse: ModelResponse?) {
@@ -106,8 +125,10 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            when (resultCode) {
-                REQUEST_ADD ->  viewModel.loadData(true)
+            when (requestCode) {
+                REQUEST_ADD ->  {
+                    viewModel.updateReminders()
+                }
             }
         }
     }
