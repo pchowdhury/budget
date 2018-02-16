@@ -61,7 +61,4 @@ interface RecurringRecordDao {
 
     @Delete
     fun deleteRecurringRecord(record: RecurringRecord): Int
-
-    @Query("DELETE FROM recurring_records")
-    fun deleteAllRecurringRecords()
 }

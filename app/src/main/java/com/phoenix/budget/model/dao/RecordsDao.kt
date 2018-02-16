@@ -20,7 +20,7 @@ interface RecordsDao {
     fun findAllRecords(): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC")
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC")
     fun findRecentRecords(): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -28,7 +28,7 @@ interface RecordsDao {
     fun findReminderRecords(): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 1 ORDER BY created_for DESC LIMIT :limit")
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC LIMIT :limit")
     fun findLimitRecentRecords(limit: Int): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -88,6 +88,6 @@ interface RecordsDao {
     @Query("DELETE FROM records")
     fun deleteAllRecords()
 
-    @Query("DELETE FROM records WHERE done = 0 AND created_for >= :time")
+    @Query("DELETE FROM records WHERE done = 0 AND (associated_id IN (SELECT id from recurring_records WHERE next_update_on <= :time))")
     fun deleteOutdatedReminders(time:Long)
 }
