@@ -3,6 +3,7 @@ package com.phoenix.budget.utils
 import android.arch.persistence.room.TypeConverter
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.RecurringRecord
+import com.phoenix.budget.model.RecurringRecord.RepeatType
 import java.util.*
 
 /**
@@ -47,5 +48,15 @@ class Converter {
         fun newRecordForRecurringRecord(recuringRecord: RecurringRecord): Record {
             return Record(recuringRecord.userId, recuringRecord.title, recuringRecord.categoryId, recuringRecord.amount, recuringRecord.isIncome, recuringRecord.note, false, recuringRecord.id, recuringRecord.createdFor, recuringRecord.updatedOn)
         }
+    }
+
+    @TypeConverter
+    fun fromRepeatType(type: Int): RepeatType {
+        return RepeatType.values()[type]
+    }
+
+    @TypeConverter
+    fun toRepeatType(type: RepeatType): Int {
+        return type.ordinal
     }
 }

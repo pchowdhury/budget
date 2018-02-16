@@ -9,8 +9,8 @@ import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -127,20 +127,6 @@ class ModifyRecordViewModel : ViewModel() {
                     })
         }
     }
-
-//    fun getDefaultCategorizedRecord(isIncome: Boolean): CategorizedRecord {
-//        return CategorizedRecord("email", isIncome)
-//    }
-//
-//    private fun loadCategorizedRecord(t: CategorizedRecord) {
-//        categorizedRecord = t
-//        transactionCallbackModify.onBindRecord(categorizedRecord)
-//    }
-
-
-//    private fun showError() {
-//        recurringRecord?
-//    }
 
     override fun onCleared() {
         super.onCleared()

@@ -5,7 +5,7 @@
     <data>
         <import type="com.phoenix.budget.utils.StringUtils" />
         <variable
-            name="report"
+            name="record"
             type="com.phoenix.budget.model.Record" />
 
         <variable
@@ -32,7 +32,7 @@
             android:clickable="true"
             android:scaleType="center"
             bind:checkable="@{false}"
-            bind:report="@{report}"
+            bind:record="@{record}"
             bind:recordCallback="@{recordCallback}" />
 
         <android.support.v7.widget.AppCompatTextView
@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:text="@{report.title}"
+            android:text="@{record.title}"
             android:textColor="@color/colorAccent" />
 
         <android.support.v7.widget.AppCompatTextView
@@ -62,7 +62,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:text="@{StringUtils.getValidCurrencyString(report.amount)}"
+            android:text="@{StringUtils.getValidCurrencyString(record.amount)}"
             android:textColor="@color/colorAccent" />
     </RelativeLayout>
 </layout>

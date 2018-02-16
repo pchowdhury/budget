@@ -18,23 +18,11 @@ import com.phoenix.budget.model.Record
  * Created by Pushpan on 05/02/18.
  */
 
-@BindingAdapter("bind:report", "bind:recordCallback", "bind:checkable")
-fun setImageIcon(view: ImageView, record: Record, recordCallback: RecordCallback, checkable: Boolean) {
-    if (checkable) {
-        view.setOnClickListener {
-            recordCallback.markReminderDone(record)
-        }
-    } else {
-        view.setImageResource(recordCallback.getIconId(record.categoryId))
-        view.setOnClickListener { recordCallback.showReport(record.categoryId) }
-    }
-}
-
 class RecordsAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
-            binding.setVariable(BR.report, item)
+            binding.setVariable(BR.record, item)
             binding.setVariable(BR.recordCallback, recordCallback)
             binding.executePendingBindings()
         }

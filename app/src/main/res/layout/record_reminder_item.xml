@@ -7,7 +7,7 @@
         <import type="com.phoenix.budget.utils.StringUtils" />
 
         <variable
-            name="report"
+            name="record"
             type="com.phoenix.budget.model.Record" />
 
         <variable
@@ -40,7 +40,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="@{StringUtils.getDayfrom(report.createdFor)}"
+                android:text="@{StringUtils.getDayfrom(record.createdFor)}"
                 android:textColor="@color/color_date_reminder_day"
                 android:textSize="@dimen/reminder_date_day_size"
                 android:textStyle="bold" />
@@ -54,7 +54,7 @@
                 android:background="@color/color_date_reminder_month_bg"
                 android:gravity="center"
                 android:padding="2dp"
-                android:text="@{StringUtils.getMonthfrom(report.createdFor)}"
+                android:text="@{StringUtils.getMonthfrom(record.createdFor)}"
                 android:textColor="@color/color_date_reminder_month"
                 android:textSize="@dimen/reminder_date_month_size" />
         </RelativeLayout>
@@ -84,7 +84,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLines="1"
-                android:text="@{report.title}"
+                android:text="@{record.title}"
                 android:textColor="@color/colorAccent" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -94,7 +94,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLines="1"
-                android:text="@{StringUtils.getValidCurrencyString(report.amount)}"
+                android:text="@{StringUtils.getValidCurrencyString(record.amount)}"
                 android:textColor="@color/colorAccent" />
 
         </LinearLayout>
@@ -110,7 +110,7 @@
             android:src="@drawable/check_ok"
             android:tint="@color/colorAccent"
             bind:checkable="@{true}"
-            bind:report="@{report}"
+            bind:record="@{record}"
             bind:recordCallback="@{recordCallback}" />
     </RelativeLayout>
 </layout>

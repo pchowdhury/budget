@@ -87,4 +87,7 @@ interface RecordsDao {
 
     @Query("DELETE FROM records")
     fun deleteAllRecords()
+
+    @Query("DELETE FROM records WHERE done = 0 AND created_for >= :time")
+    fun deleteOutdatedReminders(time:Long)
 }

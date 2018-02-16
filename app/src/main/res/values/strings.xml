@@ -15,5 +15,6 @@
     <string name="label_list_reminder_empty">No reminders</string>
     <string name="list_more">Show More...</string>
     <string name="title_records">Records</string>
+    <string name="required_approval">Required Approval</string>
 
 </resources>

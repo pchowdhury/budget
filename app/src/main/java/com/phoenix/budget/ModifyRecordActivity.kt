@@ -4,16 +4,21 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.phoenix.budget.databinding.ActivityModifyRecordBinding
 import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.CategorizedRecord
+import com.phoenix.budget.model.RecurringRecord
 import com.phoenix.budget.model.viewmodel.ModelResponse
 import com.phoenix.budget.model.viewmodel.ModifyRecordViewModel
 import com.phoenix.budget.utils.StringUtils
@@ -22,7 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ModifyRecordActivity : AppCompatActivity() {
+class ModifyRecordActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     lateinit var binding: ActivityModifyRecordBinding
     val pickDate: AppCompatTextView by lazy { findViewById<AppCompatTextView>(R.id.txtPickDate) }
     var cal = Calendar.getInstance()
@@ -41,6 +46,26 @@ class ModifyRecordActivity : AppCompatActivity() {
         viewModel.setCategorizedRecord(intent.getStringExtra(RECORD_ID),
                 intent.getBooleanExtra(IS_INCOME, false),
                 menu == PopMenuItemType.RecurringExpense || menu == PopMenuItemType.RecurringIncome)
+
+
+        val aa = ArrayAdapter(this, android.R.layout.simple_spinner_item, getRepeatOptions())
+        // Set layout to use when the list of choices appear
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        // Set Adapter to Spinner
+        binding.contentModifyRecord?.repeatTypeSpinner?.setAdapter(aa)
+
+        binding.contentModifyRecord?.repeatTypeSpinner?.setOnItemSelectedListener(this)
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        viewModel.editableCategorizedRecord().frequency = RecurringRecord.RepeatType.values()[position]
+    }
+
+    private fun getRepeatOptions(): MutableList<String> {
+        return resources.getStringArray(R.array.repeat_items).toMutableList()
     }
 
     private fun setUpUI() {
@@ -107,15 +132,15 @@ class ModifyRecordActivity : AppCompatActivity() {
             ModelResponse.Success ->{
                 val categorizedRecord = modelResponse.value as CategorizedRecord
                 binding.categorizedRecord = categorizedRecord
-                binding.categoryView.setCategorizedReport(categorizedRecord)
+                binding.contentModifyRecord!!.categoryView.setCategorizedReport(categorizedRecord)
                 binding.executePendingBindings()
-                RxTextView.afterTextChangeEvents(binding.editTitle)
+                RxTextView.afterTextChangeEvents(binding.contentModifyRecord!!.editTitle)
                         .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().title = textChangeEvent.editable().toString() }
 
-                RxTextView.afterTextChangeEvents(binding.editAmount)
+                RxTextView.afterTextChangeEvents(binding.contentModifyRecord!!.editAmount)
                         .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().amount = StringUtils.getValidCurrency(textChangeEvent.editable().toString()) }
 
-                RxTextView.afterTextChangeEvents(binding.editNote)
+                RxTextView.afterTextChangeEvents(binding.contentModifyRecord!!.editNote)
                         .subscribe { textChangeEvent -> viewModel.editableCategorizedRecord().note = textChangeEvent.editable().toString() }
             }
             ModelResponse.ACTION_1 ->{//save

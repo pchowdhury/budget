@@ -15,13 +15,13 @@ open class RecurringRecord() : Record() {
     var requiredApproval: Boolean = false
 
     @ColumnInfo(name = "frequency")
-    var frequency: Int = RepeatType.RepeatOnce
+    var frequency: RepeatType = RepeatType.RepeatOnce
 
     @ColumnInfo(name = "next_update_on")
     var nextUpdateOn: Date = Date()
 
     @Ignore
-    constructor(userId: String, title: String, categoryId: Int, amount: Double, requiredApproval: Boolean, isIncome: Boolean, note: String, frequency: Int, createdFor: Date, updatedOn: Date) : this() {
+    constructor(userId: String, title: String, categoryId: Int, amount: Double, requiredApproval: Boolean, isIncome: Boolean, note: String, frequency: RepeatType, createdFor: Date, updatedOn: Date) : this() {
         this.id = id
         this.title = title
         this.userId = userId
@@ -35,13 +35,12 @@ open class RecurringRecord() : Record() {
         this.updatedOn = updatedOn
     }
 
-    companion object RepeatType {
-        @JvmStatic
-        val RepeatOnce: Int = 0
-        val RepeatWeekly: Int = 1
-        val RepeatMonthly: Int = 2
-        val RepeatQuarterly: Int = 3
-        val RepeatYearly: Int = 4
+    enum class RepeatType(val type: Int) {
+        RepeatOnce(0),
+        RepeatWeekly(1),
+        RepeatMonthly(2),
+        RepeatQuarterly(3),
+        RepeatYearly(4)
     }
 
 }

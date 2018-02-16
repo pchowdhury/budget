@@ -30,4 +30,13 @@
         <item>@drawable/right_cheveron</item>
         <item>@drawable/time</item>
     </integer-array>
+
+    <string-array name="repeat_items">
+        <item>Once</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Yearly</item>
+    </string-array>
+
 </resources>
