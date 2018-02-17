@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by Pushpan on 12/02/18.
  */
 class ModifyRecordViewModel : ViewModel() {
-    private var isRecurring = false
+    var isRecurring = false
     private var isIncome: Boolean = false
     private var id: String = ""
     private val response: MutableLiveData<ModelResponse> = MutableLiveData()

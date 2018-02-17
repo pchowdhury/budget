@@ -47,7 +47,7 @@ class ModifyRecordActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
                 intent.getBooleanExtra(IS_INCOME, false),
                 menu == PopMenuItemType.RecurringExpense || menu == PopMenuItemType.RecurringIncome)
 
-
+        binding.setVariable(BR.viewModel, viewModel)
         val aa = ArrayAdapter(this, android.R.layout.simple_spinner_item, getRepeatOptions())
         // Set layout to use when the list of choices appear
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

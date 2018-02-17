@@ -9,6 +9,9 @@
         <variable
             name="categorizedRecord"
             type="com.phoenix.budget.model.CategorizedRecord" />
+        <variable
+            name="viewModel"
+            type="com.phoenix.budget.model.viewmodel.ModifyRecordViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -33,7 +36,8 @@
         <include
             android:id="@+id/content_modify_record"
             layout="@layout/content_modify_record"
-            bind:categorizedRecord="@{categorizedRecord}"/>
+            bind:categorizedRecord="@{categorizedRecord}"
+            bind:viewModel="@{viewModel}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
