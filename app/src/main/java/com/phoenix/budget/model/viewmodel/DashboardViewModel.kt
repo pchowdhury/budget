@@ -21,7 +21,6 @@ import java.util.*
  * Created by Pushpan on 12/02/18.
  */
 class DashboardViewModel : ViewModel() {
-    private var shouldLoadData = true
     private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
@@ -31,10 +30,12 @@ class DashboardViewModel : ViewModel() {
     var recordTobeDeleted : Record? = null
 
     fun loadData(forced: Boolean) {
-        if (shouldLoadData || forced) {
+        if (forced || recentRecordsResponse.value == null) {
             loadRecentRecord()
+        }
+
+        if (forced || reminderRecordsResponse.value == null) {
             loadReminderRecordsRecord()
-            shouldLoadData = false
         }
     }
 

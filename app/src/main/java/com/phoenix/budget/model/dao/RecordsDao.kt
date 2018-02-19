@@ -67,7 +67,7 @@ interface RecordsDao {
     fun findRecordsByCategoryId(id: Int, limit:Int): Flowable<MutableList<Record>>
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE records.category_id = :id AND records.is_income = 0")
+    @Query("SELECT * FROM records WHERE records.category_id = :id AND records.done = 1 ORDER BY updated_on DESC")
     fun findRecordsByCategoryId(id: Int): Flowable<MutableList<Record>>
 
     @Insert(onConflict = REPLACE)

@@ -1,5 +1,7 @@
 package com.phoenix.budget
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -7,17 +9,16 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.phoenix.budget.databinding.ActivityReportsBinding
 import com.phoenix.budget.model.Record
-import com.phoenix.budget.presenter.RecordPresenter
-import com.phoenix.budget.view.DashboardCardView
+import com.phoenix.budget.model.viewmodel.ModelResponse
+import com.phoenix.budget.model.viewmodel.RecordViewModel
 import com.phoenix.budget.view.RecordsAdapter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     lateinit var binding: ActivityReportsBinding
-    lateinit var presenter: RecordPresenter
+    lateinit var viewModel: RecordViewModel
 
     var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -35,12 +36,29 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reports)
         setSupportActionBar(toolbar)
         configureToolBar()
-        presenter = RecordPresenter(this)
-//        binding.presenter = presenter
         binding.contentReports?.recycleView?.layoutManager = LinearLayoutManager(this)
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView( binding.contentReports?.recycleView)
-//        loadRecords()
+        viewModel = ViewModelProviders.of(this).get(RecordViewModel::class.java)
+        viewModel.response().observe(this, Observer{
+            response-> onBindRecords(response)
+        })
+        loadRecords()
+    }
+
+    private fun onBindRecords(modelResponse: ModelResponse?) {
+        when (modelResponse?.status) {
+            ModelResponse.Loading -> {
+
+            }
+            ModelResponse.Error -> {
+
+            }
+            ModelResponse.Success -> {
+                val list = modelResponse.value as MutableList<Record>
+                binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, this, list)
+            }
+        }
     }
 
     private fun configureToolBar() {
@@ -54,21 +72,15 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     }
 
 
-    //    override fun loadRecords() {
-//        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
-//        val isRestricted = intent.getBooleanExtra(INTENT_REQUEST_IS_RESTRICTED, false)
-//
-//        if (categoryId == -1) {
-//            presenter.loadRecentRecords(-1)
-//        } else {
-//            presenter.loadRecordsByCategoryId(categoryId, if (isRestricted) DashboardCardView.MAX_ROWS else -1)
-//        }
-//    }
-//
-//    override fun loadReminders() {
-//    }
-//
-//
+    fun loadRecords() {
+        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
+        if (categoryId == -1) {
+            viewModel.loadRecentRecord()
+        } else {
+            viewModel.loadRecordsByCategoryId(categoryId)
+        }
+    }
+
     override fun showReport(categoryId: Int) {
     }
 //
@@ -83,21 +95,20 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
 //        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 //    }
 //
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.menu_dashboard, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            android.R.id.home -> {
-//                finish()
-//                return true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_dashboard, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onRemoveRecord(record: Record) {
     }
