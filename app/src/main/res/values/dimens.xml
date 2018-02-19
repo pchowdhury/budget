@@ -37,4 +37,8 @@
     <dimen name="reminder_date_day_size">18sp</dimen>
     <dimen name="reminder_date_month_size">10sp</dimen>
 
+    <!--dialog-->
+    <dimen name="dialog_title_size">16sp</dimen>
+    <dimen name="dialog_margin">10dp</dimen>
+
 </resources>

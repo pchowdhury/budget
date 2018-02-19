@@ -13,4 +13,6 @@ interface RecordCallback : CategoryCallback {
     fun showReport(categoryId:Int)
 
     fun markReminderDone(record: Record)
+
+    fun onRemoveRecord(record: Record)
 }

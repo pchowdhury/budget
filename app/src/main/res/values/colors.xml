@@ -8,4 +8,6 @@
     <color name="color_date_reminder_day">#000000</color>
     <color name="color_date_reminder_month">#ffffff</color>
     <color name="color_date_reminder_month_bg">#800000</color>
+    <color name="color_translucent_black">#80000000</color>
+    <color name="color_translucent_white">#80ffffff</color>
 </resources>

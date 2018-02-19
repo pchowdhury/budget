@@ -17,4 +17,13 @@
     <string name="title_records">Records</string>
     <string name="required_approval">Required Approval</string>
 
+    <!--dialog-->
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
+
+
+    <string name="dialog_title_confirmation">Confrirmation</string>
+    <string name="dialog_recurring_confirmation">Do you want to delete all the reminders for this expense/income?</string>
 </resources>

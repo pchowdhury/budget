@@ -28,6 +28,7 @@ class DashboardViewModel : ViewModel() {
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private var disposable = CompositeDisposable()
     private val calendar = Calendar.getInstance()
+    var recordTobeDeleted : Record? = null
 
     fun loadData(forced: Boolean) {
         if (shouldLoadData || forced) {
@@ -146,24 +147,69 @@ class DashboardViewModel : ViewModel() {
     }
 
 
-    fun removeDashboardRecentRecord(record: Record) {
-        Single.create(SingleOnSubscribe<Int> { emitter ->
-            try {
-                val ids = BudgetApp.database.recordsDao().deleteRecord(record)
-                emitter.onSuccess(ids)
-            } catch (t: Throwable) {
-                emitter.onError(t)
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(object : DisposableSingleObserver<Int>() {
-                    override fun onSuccess(ids: Int) {
-                        addRemindersResponse.value = ModelResponse.success(null)
+    fun removeDashboardSingleRecord() {
+        if (recordTobeDeleted != null) {
+            val record = recordTobeDeleted
+            Single.create(SingleOnSubscribe<Int> { emitter ->
+                try {
+                    val ids = BudgetApp.database.recordsDao().deleteRecord(record)
+                    emitter.onSuccess(ids)
+                } catch (t: Throwable) {
+                    emitter.onError(t)
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeWith(object : DisposableSingleObserver<Int>() {
+                        override fun onSuccess(ids: Int) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.success(null)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.error(e)
+                        }
+                    })
+        }
+    }
+
+    fun removeDashboardRecurringRecord() {
+        if (recordTobeDeleted != null) {
+            val record = recordTobeDeleted
+            Single.create(SingleOnSubscribe<Boolean> { emitter ->
+                try {
+                    if (record != null) {
+                        BudgetApp.database.recurringRecordsDao().deleteRecurringRecordWithId(record.associatedId)
+                        BudgetApp.database.recordsDao().deleteAllRecordsWithAssociatedId(record.associatedId)
+                        emitter.onSuccess(true)
+                    }else{
+                        emitter.onSuccess(false)
                     }
-                    override fun onError(e: Throwable) {
-                        addRemindersResponse.value = ModelResponse.error(e)
-                    }
-                })
+                } catch (t: Throwable) {
+                    emitter.onError(t)
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeWith(object : DisposableSingleObserver<Boolean>() {
+                        override fun onSuccess(success: Boolean) {
+                            clearRecordTobeDeleted()
+                            if(success){
+                                addRemindersResponse.value = ModelResponse.success(success)
+                            }else{
+                                addRemindersResponse.value = ModelResponse.error(Exception("Something went wrong"))
+                            }
+                        }
+
+                        override fun onError(e: Throwable) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.error(e)
+                        }
+                    })
+        }
+    }
+
+    fun clearRecordTobeDeleted(){
+        recordTobeDeleted = null
     }
 
     fun markReminderDone(record: Record) {

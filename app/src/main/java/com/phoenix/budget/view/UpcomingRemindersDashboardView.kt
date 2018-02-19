@@ -20,7 +20,7 @@ class UpcomingRemindersDashboardView @kotlin.jvm.JvmOverloads constructor(
     }
 
     override fun onSwipeRemove(position: Int){
-//        presenter.removeDashboardReminder((recycleView.adapter as RemindersAdapter).getDataAtPosition(position))
+        recordCallback.onRemoveRecord((recycleView.adapter as RemindersAdapter).getDataAtPosition(position))
     }
 }
 

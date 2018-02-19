@@ -83,10 +83,13 @@ interface RecordsDao {
     fun updateRecord(record: Record): Int
 
     @Delete
-    fun deleteRecord(record: Record): Int
+    fun deleteRecord(record: Record?): Int
 
     @Query("DELETE FROM records")
     fun deleteAllRecords()
+
+    @Query("DELETE FROM records WHERE done = 0 AND associated_id = :id")
+    fun deleteAllRecordsWithAssociatedId(id: String)
 
     @Query("DELETE FROM records WHERE done = 0 AND (associated_id IN (SELECT id from recurring_records WHERE next_update_on <= :time))")
     fun deleteOutdatedReminders(time:Long)

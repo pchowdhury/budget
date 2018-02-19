@@ -59,6 +59,6 @@ open class Record() {
         this.updatedOn = updatedOn
     }
 
-    fun isReminder(): Boolean = createdFor.after(Date(System.currentTimeMillis()))
+    fun isReminder(): Boolean = !done
 
 }

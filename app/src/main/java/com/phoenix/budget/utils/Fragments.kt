@@ -1,5 +1,6 @@
 package com.phoenix.budget.utils
 
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 
 /**
@@ -15,6 +16,19 @@ object Fragments {
      */
     // We are actually checking these casts
     fun <T> resolveListener(fragment: Fragment, listenerType: Class<T>): T? {
+        return if (listenerType.isInstance(fragment.targetFragment)) {
+            fragment.targetFragment as T
+        } else if (listenerType.isInstance(fragment.parentFragment)) {
+            fragment.parentFragment as T
+        } else if (listenerType.isInstance(fragment.activity)) {
+            fragment.activity as T
+        } else {
+            null
+        }
+    }
+
+    // We are actually checking these casts
+    fun <T> resolveListener(fragment: DialogFragment, listenerType: Class<T>): T? {
         return if (listenerType.isInstance(fragment.targetFragment)) {
             fragment.targetFragment as T
         } else if (listenerType.isInstance(fragment.parentFragment)) {

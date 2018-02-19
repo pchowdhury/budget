@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.phoenix.budget.databinding.ActivityDashboardBinding
+import com.phoenix.budget.dialog.ConfirmationDialogFragment
 import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
@@ -17,7 +18,7 @@ import com.phoenix.budget.model.viewmodel.DashboardViewModel
 import com.phoenix.budget.model.viewmodel.ModelResponse
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
-class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
+class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, ConfirmationDialogFragment.ConfirmationCallback {
     lateinit var binding: ActivityDashboardBinding
     lateinit var viewModel: DashboardViewModel
     val menuFragment = MenuFragment()
@@ -26,25 +27,28 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     private val REQUEST_ADD = 1
     private val REQUEST_VIEW = 2
 
+    private val DIALOG_REMOVE_RECORD = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
 
         viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> {
-            response -> onBindRecentRecords(response)
+        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> { response ->
+            onBindRecentRecords(response)
         })
-        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> {
-            response -> onBindReminderRecords(response)
-        })
-
-        viewModel.addRemindersResponse().observe(this, Observer<ModelResponse>{
-            response -> onFinishUpdatingReminders(response)
+        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> { response ->
+            onBindReminderRecords(response)
         })
 
-        viewModel.updateRemindersResponse().observe(this, Observer<ModelResponse>{
-            response -> onFinishUpdatingReminders(response)
+        viewModel.addRemindersResponse().observe(this, Observer<ModelResponse> { response ->
+            onFinishUpdatingReminders(response)
+        })
+
+        viewModel.updateRemindersResponse().observe(this, Observer<ModelResponse> { response ->
+            onFinishUpdatingReminders(response)
         })
 
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
@@ -52,28 +56,28 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     }
 
     private fun onFinishUpdatingReminders(modelResponse: ModelResponse?) {
-        when(modelResponse?.status){
-            ModelResponse.Loading ->{
+        when (modelResponse?.status) {
+            ModelResponse.Loading -> {
 
             }
-            ModelResponse.Error ->{
+            ModelResponse.Error -> {
                 viewModel.loadData(true)
             }
-            ModelResponse.Success ->{
+            ModelResponse.Success -> {
                 viewModel.loadData(true)
             }
         }
     }
 
     private fun onBindReminderRecords(modelResponse: ModelResponse?) {
-        when(modelResponse?.status){
-            ModelResponse.Loading ->{
+        when (modelResponse?.status) {
+            ModelResponse.Loading -> {
 
             }
-            ModelResponse.Error ->{
+            ModelResponse.Error -> {
 
             }
-            ModelResponse.Success ->{
+            ModelResponse.Success -> {
                 val list = modelResponse.value as MutableList<Record>
                 binding.contentDashboard?.cardViewUpcomingReminders?.recordCallback = this
                 binding.executePendingBindings()
@@ -83,14 +87,14 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     }
 
     private fun onBindRecentRecords(modelResponse: ModelResponse?) {
-        when(modelResponse?.status){
-            ModelResponse.Loading ->{
+        when (modelResponse?.status) {
+            ModelResponse.Loading -> {
 
             }
-            ModelResponse.Error ->{
+            ModelResponse.Error -> {
 
             }
-            ModelResponse.Success ->{
+            ModelResponse.Success -> {
                 val list = modelResponse.value as MutableList<Record>
                 binding.contentDashboard?.cardViewRecentRecords?.recordCallback = this
                 binding.executePendingBindings()
@@ -106,6 +110,29 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
     override fun markReminderDone(record: Record) {
         viewModel.markReminderDone(record)
     }
+
+    override fun onRemoveRecord(record: Record) {
+        viewModel.recordTobeDeleted = record
+        if (!record.done) {
+            val f = ConfirmationDialogFragment.create(DIALOG_REMOVE_RECORD, getString(R.string.dialog_title_confirmation), getString(R.string.dialog_recurring_confirmation))
+            f.show(supportFragmentManager, ConfirmationDialogFragment.TAG)
+        } else {
+            viewModel.removeDashboardSingleRecord()
+        }
+    }
+
+    override fun onPositiveResponse(type: Int) {
+        viewModel.removeDashboardRecurringRecord()
+    }
+
+    override fun onNegativeResponse(type: Int) {
+        viewModel.removeDashboardSingleRecord()
+    }
+
+    override fun onRespondingCancel(type: Int) {
+       viewModel.clearRecordTobeDeleted()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -134,7 +161,7 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_ADD ->  {
+                REQUEST_ADD -> {
                     viewModel.updateReminders()
                 }
             }

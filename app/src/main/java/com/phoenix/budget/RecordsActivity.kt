@@ -99,6 +99,9 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
 //        }
 //    }
 
+    override fun onRemoveRecord(record: Record) {
+    }
+
     companion object {
         @JvmStatic
         val INTENT_REQUEST_VIEW: String = "INTENT_REQUEST_VIEW"
