@@ -59,6 +59,6 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        val MAX_ROWS = 20
+        val MAX_ROWS = 5
     }
 }
