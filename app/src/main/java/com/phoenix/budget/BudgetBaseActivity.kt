@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import com.phoenix.budget.model.viewmodel.ViewRequestID
 
 import kotlinx.android.synthetic.main.activity_budget_base.*
 
@@ -28,4 +29,11 @@ open class BudgetBaseActivity : AppCompatActivity(), CategoryCallback {
     }
 
     override fun getIconId(catogoryId: Int): Int = if (catogoryId == -1) iconArr!![iconArr!!.size - 1] else iconArr!![catogoryId]
+
+    fun starViewRecords(category: Int) {
+        val intent = Intent(this, RecordsActivity::class.java)
+        intent.putExtra(RecordsActivity.INTENT_REQUEST_VIEW, category)
+        intent.putExtra(RecordsActivity.INTENT_REQUEST_IS_RESTRICTED, true)
+        startActivityForResult(intent, ViewRequestID.RecordScreen.ordinal)
+    }
 }

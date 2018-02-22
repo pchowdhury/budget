@@ -14,7 +14,9 @@ import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.viewmodel.ModelResponse
 import com.phoenix.budget.model.viewmodel.RecordViewModel
 import com.phoenix.budget.view.RecordsAdapter
+import com.phoenix.budget.view.RemindersAdapter
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.dashboard_card_view.view.*
 
 class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     lateinit var binding: ActivityReportsBinding
@@ -27,7 +29,7 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//            presenter.removeDashboardRecentRecord((binding.contentReports?.recycleView?.adapter as RecordsAdapter).getDataAtPosition(viewHolder.adapterPosition))
+            removeRecord((binding.contentReports?.recycleView?.adapter as RemindersAdapter).getDataAtPosition(viewHolder.adapterPosition))
         }
     }
 
@@ -68,33 +70,23 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    override fun markReminderDone(record: Record) {
+    fun removeRecord(record: Record) {
+        viewModel.removeSingleRecord(record)
     }
 
 
     fun loadRecords() {
         val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
-        if (categoryId == -1) {
-            viewModel.loadRecentRecord()
-        } else {
-            viewModel.loadRecordsByCategoryId(categoryId)
-        }
+        viewModel.loadRecords(categoryId, false)
+    }
+
+    override fun markReminderDone(record: Record) {
     }
 
     override fun showReport(categoryId: Int) {
+        starViewRecords(categoryId)
     }
-//
-//    override fun updateRecentRecords(list: MutableList<Record>) {
-//        binding.contentReports?.recycleView?.adapter = RecordsAdapter(this, presenter, list)
-//    }
-//
-//    override fun updateReminders(list: MutableList<Record>) {
-//    }
-//
-//    override fun showError(text: String) {
-//        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-//    }
-//
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_dashboard, menu)

@@ -16,6 +16,7 @@ import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.viewmodel.DashboardViewModel
 import com.phoenix.budget.model.viewmodel.ModelResponse
+import com.phoenix.budget.model.viewmodel.ViewRequestID
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, ConfirmationDialogFragment.ConfirmationCallback {
@@ -23,9 +24,6 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
     lateinit var viewModel: DashboardViewModel
     val menuFragment = MenuFragment()
 
-
-    private val REQUEST_ADD = 1
-    private val REQUEST_VIEW = 2
 
     private val DIALOG_REMOVE_RECORD = 0
 
@@ -122,15 +120,21 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
     }
 
     override fun onPositiveResponse(type: Int) {
-        viewModel.removeDashboardRecurringRecord()
+        when (type) {
+            DIALOG_REMOVE_RECORD -> viewModel.removeDashboardRecurringRecord()
+        }
     }
 
     override fun onNegativeResponse(type: Int) {
-        viewModel.removeDashboardSingleRecord()
+        when (type) {
+            DIALOG_REMOVE_RECORD -> viewModel.removeDashboardSingleRecord()
+        }
     }
 
     override fun onRespondingCancel(type: Int) {
-       viewModel.clearRecordTobeDeleted()
+        when (type) {
+            DIALOG_REMOVE_RECORD ->   viewModel.clearRecordTobeDeleted()
+        }
     }
 
 
@@ -154,24 +158,17 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         val intent = Intent(this, ModifyRecordActivity::class.java)
         intent.putExtra(ModifyRecordActivity.MODE, menuItem.ordinal)
         intent.putExtra(ModifyRecordActivity.RECORD_ID, "")
-        startActivityForResult(intent, REQUEST_ADD)
+        startActivityForResult(intent, ViewRequestID.ModifyRecordScreen.ordinal)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_ADD -> {
+                ViewRequestID.ModifyRecordScreen.ordinal -> {
                     viewModel.updateReminders()
                 }
             }
         }
-    }
-
-    fun starViewRecords(category: Int) {
-        val intent = Intent(this, RecordsActivity::class.java)
-        intent.putExtra(RecordsActivity.INTENT_REQUEST_VIEW, category)
-        intent.putExtra(RecordsActivity.INTENT_REQUEST_IS_RESTRICTED, true)
-        startActivityForResult(intent, REQUEST_VIEW)
     }
 }

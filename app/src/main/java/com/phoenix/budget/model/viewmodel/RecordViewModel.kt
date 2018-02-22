@@ -2,14 +2,12 @@ package com.phoenix.budget.model.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.phoenix.budget.model.CategorizedRecord
+import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
-import com.phoenix.budget.view.DashboardCardView
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
@@ -20,20 +18,31 @@ import io.reactivex.schedulers.Schedulers
 class RecordViewModel : ViewModel() {
     private val response: MutableLiveData<ModelResponse> = MutableLiveData()
     private var disposable = CompositeDisposable()
+    private var categoryId: Int = -1
 
+    fun loadRecords(categoryId: Int, forceLoad: Boolean){
+        this.categoryId = categoryId
+        if (categoryId == -1) {
+            loadRecentRecord(forceLoad)
+        } else {
+            loadRecordsByCategoryId(categoryId, forceLoad)
+        }
 
-    fun loadRecordsByCategoryId(categoryId: Int) {
-        if (response.value == null) {
+    }
+
+    fun loadRecordsByCategoryId(categoryId: Int, forceLoad: Boolean) {
+        if (response.value == null || forceLoad) {
             disposable.add(BudgetApp.database.recordsDao().findRecordsByCategoryId(categoryId)
                     .doOnSubscribe { _ -> response.postValue(ModelResponse.loading())}
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .take(3)
                     .subscribe({ list -> response.value = ModelResponse.success(list) }, { error -> response.value = ModelResponse.error(error) }))
         }
     }
 
-    fun loadRecentRecord() {
-        if (response.value == null) {
+    fun loadRecentRecord(forceLoad: Boolean) {
+        if (response.value == null || forceLoad) {
             disposable.add(
                     BudgetApp.database.recordsDao().findRecentRecords()
                             .doOnSubscribe { _ -> response.postValue(ModelResponse.loading())}
@@ -48,6 +57,27 @@ class RecordViewModel : ViewModel() {
     }
 
     fun response(): MutableLiveData<ModelResponse> = response
+
+    fun removeSingleRecord(record: Record) {
+            Single.create(SingleOnSubscribe<Int> { emitter ->
+                try {
+                    val ids = BudgetApp.database.recordsDao().deleteRecord(record)
+                    emitter.onSuccess(ids)
+                } catch (t: Throwable) {
+                    emitter.onError(t)
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeWith(object : DisposableSingleObserver<Int>() {
+                        override fun onSuccess(ids: Int) {
+                            loadRecentRecord(true)
+                        }
+
+                        override fun onError(e: Throwable) {
+
+                        }
+                    })
+    }
 
     override fun onCleared() {
         super.onCleared()
