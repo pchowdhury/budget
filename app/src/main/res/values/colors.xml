@@ -10,4 +10,8 @@
     <color name="color_date_reminder_month_bg">#800000</color>
     <color name="color_translucent_black">#80000000</color>
     <color name="color_translucent_white">#80ffffff</color>
+    <color name="color_green">#005500</color>
+    <color name="color_blue">#000055</color>
+    <color name="color_cell_text">#000000</color>
+    <color name="color_note_grey">#aaaaaa</color>
 </resources>

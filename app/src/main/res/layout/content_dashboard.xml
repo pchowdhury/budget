@@ -38,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:empty="@string/label_list_reminder_empty"
-                app:label="@string/list_upcoming_reminders" />
+                app:label="@string/list_upcoming_reminders"
+                app:showMore="false" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </layout>

@@ -38,5 +38,48 @@ class StringUtils {
             val sdf = SimpleDateFormat(myFormat, Locale.US)
             return  sdf.format(date)
         }
+
+        @JvmStatic
+        fun getActualDatefrom(date: Date?): String {
+            val myFormat = "dd MMM YY" // mention the format you need
+            val sdf = SimpleDateFormat(myFormat, Locale.US)
+            return  sdf.format(date)
+        }
+
+        @JvmStatic
+        fun getTimeTimeUntil(date: Date): String {
+            val now = System.currentTimeMillis()
+            var passed = (now - date.time) / 1000
+            val buff =  StringBuffer()
+
+
+            val duration = arrayOf(
+                    (12 * 30 * 24 * 60 * 60),//years
+                    (30 * 24 * 60 * 60),//months
+                    (24 * 60 * 60), //days
+                    (60 * 60), //hour
+                    (60)//min
+            )
+            val label = arrayListOf(
+                    "year",
+                    "month",
+                    "day",
+                    "hour",
+                    "min"
+            )
+
+            for( i in 0 until duration.size){
+                val t = passed / duration[i]
+                passed %= duration[i]
+                if (t != 0L) {
+                    buff.append(t).append(" ").append(label[i])
+                    if (t > 1) {
+                        buff.append("s")
+                    }
+                    return buff.append(" ago").toString()
+                }
+            }
+            return "now"
+        }
     }
 }

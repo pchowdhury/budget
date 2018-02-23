@@ -85,7 +85,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@{record.title}"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/color_cell_text" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/txtAmount"
@@ -95,7 +95,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@{StringUtils.getValidCurrencyString(record.amount)}"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/color_cell_text" />
 
         </LinearLayout>
 
@@ -108,7 +108,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/record_item_margin"
             android:src="@drawable/check_ok"
-            android:tint="@color/colorAccent"
+            android:tint="@color/color_blue"
             bind:checkable="@{true}"
             bind:record="@{record}"
             bind:recordCallback="@{recordCallback}" />

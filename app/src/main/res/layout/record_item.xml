@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
-
     <data>
         <import type="com.phoenix.budget.utils.StringUtils" />
+
         <variable
             name="record"
             type="com.phoenix.budget.model.Record" />
@@ -17,8 +17,8 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/category_item_margin"
         android:orientation="horizontal"
+        android:padding="@dimen/category_item_margin"
         android:scaleType="center">
 
         <ImageView
@@ -36,11 +36,67 @@
             bind:recordCallback="@{recordCallback}" />
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/dateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignTop="@id/imgCategory"
+            android:layout_marginLeft="@dimen/record_item_margin"
+            android:layout_marginStart="@dimen/record_item_margin"
+            android:layout_toEndOf="@id/imgCategory"
+            android:layout_toRightOf="@id/imgCategory"
+            android:background="@color/color_green"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="@dimen/border_width"
+            android:text="@{StringUtils.getActualDatefrom(record.createdFor)}"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/update_time" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/dateUpdateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignTop="@id/imgCategory"
+            android:layout_marginLeft="@dimen/record_item_margin"
+            android:layout_marginStart="@dimen/record_item_margin"
+            android:layout_toEndOf="@+id/dateTxt"
+            android:layout_toRightOf="@+id/dateTxt"
+            android:background="@color/color_blue"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="@dimen/border_width"
+            android:text="@{StringUtils.getActualDatefrom(record.updatedOn)}"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/update_time"
+            android:visibility="@{record.done}" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/timePassedTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignTop="@id/imgCategory"
+            android:layout_margin="@dimen/record_item_margin"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="@{StringUtils.getTimeTimeUntil(record.updatedOn)}"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/time_until" />
+
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/record_item_margin"
+            android:layout_below="@+id/dateTxt"
+            android:layout_marginLeft="@dimen/record_item_margin"
+            android:layout_marginStart="@dimen/record_item_margin"
             android:layout_toEndOf="@id/imgCategory"
             android:layout_toLeftOf="@+id/txtAmount"
             android:layout_toRightOf="@id/imgCategory"
@@ -49,7 +105,26 @@
             android:lines="1"
             android:maxLines="1"
             android:text="@{record.title}"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/color_cell_text" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginLeft="@dimen/record_item_margin"
+            android:layout_marginStart="@dimen/record_item_margin"
+            android:layout_marginRight="@dimen/record_item_margin"
+            android:layout_marginEnd="@dimen/record_item_margin"
+            android:layout_toEndOf="@id/imgCategory"
+            android:layout_toRightOf="@id/imgCategory"
+            android:background="@color/color_note_grey"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textSize="@dimen/note_size"
+            android:text="@{record.note}"
+            android:textColor="@color/color_cell_text"
+            android:visibility="@{record.hasNote()}" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txtAmount"
@@ -57,12 +132,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/title"
             android:layout_margin="@dimen/record_item_margin"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
             android:text="@{StringUtils.getValidCurrencyString(record.amount)}"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/color_cell_text" />
     </RelativeLayout>
 </layout>

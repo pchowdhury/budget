@@ -38,9 +38,11 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.DashboardCardStyle, defStyleAttr, 0)
         val label = a.getString(R.styleable.DashboardCardStyle_label)
         val emptyLabel= a.getString(R.styleable.DashboardCardStyle_empty)
+        val showMore = a.getBoolean(R.styleable.DashboardCardStyle_showMore, true)
         a?.recycle()
         listRecordsTitle.text = label
         listEmpty.text = emptyLabel
+        listMore.visibility = if (showMore) View.VISIBLE else View.GONE
         recycleView.layoutManager = LinearLayoutManager(context)
         listMore.setOnClickListener({ onMoreClick() })
         val itemTouchHelper = ItemTouchHelper(simpleCallback)

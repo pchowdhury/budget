@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.text.TextUtils
 import java.util.*
 
 /**
@@ -60,5 +61,9 @@ open class Record() {
     }
 
     fun isReminder(): Boolean = !done
+
+    fun hasNote():Boolean {
+        return TextUtils.isEmpty(note)
+    }
 
 }
