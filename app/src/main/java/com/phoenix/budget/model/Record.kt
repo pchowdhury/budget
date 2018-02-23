@@ -63,7 +63,7 @@ open class Record() {
     fun isReminder(): Boolean = !done
 
     fun hasNote():Boolean {
-        return TextUtils.isEmpty(note)
+        return !TextUtils.isEmpty(note)
     }
 
 }

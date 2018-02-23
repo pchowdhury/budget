@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <import type="com.phoenix.budget.utils.StringUtils" />
 
         <variable
@@ -54,16 +56,29 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/update_time" />
 
+        <ImageView
+            android:id="@+id/to_icon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="@dimen/record_item_small_margin"
+            android:layout_marginStart="@dimen/record_item_small_margin"
+            android:layout_marginTop="@dimen/record_item_small_margin"
+            android:layout_alignTop="@+id/dateTxt"
+            android:layout_toEndOf="@+id/dateTxt"
+            android:layout_toRightOf="@+id/dateTxt"
+            android:scaleType="fitXY"
+            android:src="@drawable/play"
+            android:tint="@color/color_red" />
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/dateUpdateTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignTop="@id/imgCategory"
-            android:layout_marginLeft="@dimen/record_item_margin"
-            android:layout_marginStart="@dimen/record_item_margin"
-            android:layout_toEndOf="@+id/dateTxt"
-            android:layout_toRightOf="@+id/dateTxt"
+            android:layout_marginLeft="@dimen/record_item_small_margin"
+            android:layout_marginStart="@dimen/record_item_small_margin"
+            android:layout_toEndOf="@+id/to_icon"
+            android:layout_toRightOf="@+id/to_icon"
             android:background="@color/color_blue"
             android:ellipsize="end"
             android:lines="1"
@@ -112,18 +127,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:layout_marginLeft="@dimen/record_item_margin"
-            android:layout_marginStart="@dimen/record_item_margin"
-            android:layout_marginRight="@dimen/record_item_margin"
             android:layout_marginEnd="@dimen/record_item_margin"
+            android:layout_marginLeft="@dimen/record_item_margin"
+            android:layout_marginRight="@dimen/record_item_margin"
+            android:layout_marginStart="@dimen/record_item_margin"
+            android:layout_marginTop="@dimen/record_item_margin"
             android:layout_toEndOf="@id/imgCategory"
             android:layout_toRightOf="@id/imgCategory"
             android:background="@color/color_note_grey"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textSize="@dimen/note_size"
+            android:padding="@dimen/border_width"
             android:text="@{record.note}"
             android:textColor="@color/color_cell_text"
+            android:textSize="@dimen/note_size"
             android:visibility="@{record.hasNote()}" />
 
         <android.support.v7.widget.AppCompatTextView

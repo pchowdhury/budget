@@ -13,5 +13,6 @@
     <color name="color_green">#005500</color>
     <color name="color_blue">#000055</color>
     <color name="color_cell_text">#000000</color>
-    <color name="color_note_grey">#aaaaaa</color>
+    <color name="color_note_grey">#cccccc</color>
+    <color name="color_red">#550000</color>
 </resources>
