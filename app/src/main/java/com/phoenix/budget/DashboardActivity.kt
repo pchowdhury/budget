@@ -16,7 +16,7 @@ import com.phoenix.budget.fragment.PopMenuItemType
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.viewmodel.DashboardViewModel
 import com.phoenix.budget.model.viewmodel.ModelResponse
-import com.phoenix.budget.model.viewmodel.ViewRequestID
+import com.phoenix.budget.model.ViewRequestID
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, ConfirmationDialogFragment.ConfirmationCallback {

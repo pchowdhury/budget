@@ -66,4 +66,7 @@ open class Record() {
         return !TextUtils.isEmpty(note)
     }
 
+    fun hasPassedDeadline(): Boolean {
+        return createdFor.time < System.currentTimeMillis()
+    }
 }

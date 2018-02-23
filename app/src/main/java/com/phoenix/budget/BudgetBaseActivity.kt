@@ -3,11 +3,8 @@ package com.phoenix.budget
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import com.phoenix.budget.model.viewmodel.ViewRequestID
-
-import kotlinx.android.synthetic.main.activity_budget_base.*
+import com.phoenix.budget.model.ViewRequestID
 
 open class BudgetBaseActivity : AppCompatActivity(), CategoryCallback {
 

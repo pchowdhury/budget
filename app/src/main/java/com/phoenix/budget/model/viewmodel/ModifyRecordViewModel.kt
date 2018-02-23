@@ -84,7 +84,7 @@ class ModifyRecordViewModel : ViewModel() {
     }
 
 
-    fun getInsertRecordDisposable(addAnother: Boolean): Disposable {
+    private fun getInsertRecordDisposable(addAnother: Boolean): Disposable {
         if (isRecurring) {
             return Single.create(SingleOnSubscribe<Long> { emitter ->
                 try {

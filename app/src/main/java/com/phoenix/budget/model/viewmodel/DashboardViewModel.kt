@@ -23,6 +23,7 @@ import java.util.*
 class DashboardViewModel : ViewModel() {
     private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+
     private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private var disposable = CompositeDisposable()
@@ -107,7 +108,6 @@ class DashboardViewModel : ViewModel() {
     private fun addToRecords(recordList: MutableList<Record>, recurringRecord: RecurringRecord, timeNow: Long, nextUpdateTime: Long) {
         calendar.timeInMillis = recurringRecord.createdFor.time
         recurringRecord.nextUpdateOn = Date(nextUpdateTime)
-        var record: Record?
         var shouldExit = false
         while (calendar.timeInMillis in timeNow..nextUpdateTime) {
             when (recurringRecord.frequency) {
@@ -128,7 +128,7 @@ class DashboardViewModel : ViewModel() {
                 }
             }
 
-            record = getNextRecordFor(recurringRecord, calendar.timeInMillis, nextUpdateTime)
+            val record = getNextRecordFor(recurringRecord, calendar.timeInMillis, nextUpdateTime)
             if (record != null) recordList.add(record) else return
             if (shouldExit) {
                 return

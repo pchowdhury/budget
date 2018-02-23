@@ -1,4 +1,4 @@
-package com.phoenix.budget.model.viewmodel
+package com.phoenix.budget.model
 
 /**
  * Created by Pushpan on 21/02/18.
