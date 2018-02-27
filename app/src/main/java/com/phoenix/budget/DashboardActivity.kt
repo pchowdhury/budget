@@ -13,10 +13,14 @@ import com.phoenix.budget.dialog.ConfirmationDialogFragment
 import com.phoenix.budget.fragment.MenuCallback
 import com.phoenix.budget.fragment.MenuFragment
 import com.phoenix.budget.fragment.PopMenuItemType
+import com.phoenix.budget.model.BudgetFilter
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.viewmodel.DashboardViewModel
 import com.phoenix.budget.model.viewmodel.ModelResponse
 import com.phoenix.budget.model.ViewRequestID
+import com.phoenix.budget.persistence.BudgetApp
+import com.phoenix.budget.view.DashboardCardView
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, ConfirmationDialogFragment.ConfirmationCallback {
@@ -34,12 +38,37 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         setSupportActionBar(toolbar)
 
         viewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> { response ->
-            onBindRecentRecords(response)
-        })
-        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> { response ->
-            onBindReminderRecords(response)
-        })
+
+        if (!viewModel.hasInitialized) {
+            viewModel.addFilter(BudgetFilter("Recent events", BudgetFilter.BudgetFilterType.Record, {
+                BudgetApp.database.recordsDao().findRecentRecords(DashboardCardView.MAX_ROWS)
+            }, { showReport("Recent events") }))
+            viewModel.addFilter(BudgetFilter("Recent Expenses", BudgetFilter.BudgetFilterType.Record, {
+                BudgetApp.database.recordsDao().findRecentExpenses(DashboardCardView.MAX_ROWS)
+            }, { showReport("Recent Expenses") }))
+            viewModel.addFilter(BudgetFilter("Recent Incomes", BudgetFilter.BudgetFilterType.Record, {
+                BudgetApp.database.recordsDao().findRecentIncomes(DashboardCardView.MAX_ROWS)
+            }, { showReport("Recent Incomes") }))
+            viewModel.addFilter(BudgetFilter("Upcoming events", BudgetFilter.BudgetFilterType.Reminder, {
+                BudgetApp.database.recordsDao().findReminderRecords(DashboardCardView.ALL_ROWS)
+            }, { showReport("Upcoming events") }))
+        }
+
+        viewModel.filters.forEach {
+            it -> addListFilterType(it)
+        }
+
+//        viewModel.filters.forEach { it ->
+//            it.recordsResponse.observe(this, Observer<ModelResponse> { response -> onBindRecords(it, response) })
+//        }
+
+//
+//        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> { response ->
+//            onBindRecentRecords(response)
+//        })
+//        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> { response ->
+//            onBindReminderRecords(response)
+//        })
 
         viewModel.addRemindersResponse().observe(this, Observer<ModelResponse> { response ->
             onFinishUpdatingReminders(response)
@@ -51,6 +80,34 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
 
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
         viewModel.loadData(false)
+    }
+
+    private fun addListFilterType(filter: BudgetFilter) {
+    val view = DashboardCardView(this)
+        view.setLabel(filter.name)
+        view.setEmptyLabel("No "+ filter.name.toLowerCase())
+        view.setOnMoreClick(filter.onMore)
+        binding.contentDashboard?.layoutLists?.addView(view)
+        filter.recordsResponse.observe(this, Observer<ModelResponse> { response -> onBindRecords(filter.type, view, response) })
+    }
+
+    private fun onBindRecords(filterType: BudgetFilter.BudgetFilterType, view: DashboardCardView, modelResponse: ModelResponse?) {
+        when (modelResponse?.status) {
+            ModelResponse.Loading -> {
+
+            }
+            ModelResponse.Error -> {
+//                viewModel.loadData(true)
+            }
+            ModelResponse.Success -> {
+                val list = modelResponse.value as MutableList<Record>
+                view.recordCallback = this
+//                binding.executePendingBindings()
+                view.setCardList(filterType, list)
+//                viewModel.loadData(true)
+            }
+        }
+
     }
 
     private fun onFinishUpdatingReminders(modelResponse: ModelResponse?) {
@@ -67,42 +124,43 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         }
     }
 
-    private fun onBindReminderRecords(modelResponse: ModelResponse?) {
-        when (modelResponse?.status) {
-            ModelResponse.Loading -> {
+//    private fun onBindReminderRecords(modelResponse: ModelResponse?) {
+//        when (modelResponse?.status) {
+//            ModelResponse.Loading -> {
+//
+//            }
+//            ModelResponse.Error -> {
+//
+//            }
+//            ModelResponse.Success -> {
+//                val list = modelResponse.value as MutableList<Record>
+//                binding.contentDashboard?.cardViewUpcomingReminders?.recordCallback = this
+//                binding.executePendingBindings()
+//                binding.contentDashboard?.cardViewUpcomingReminders?.setCardList(list)
+//            }
+//        }
+//    }
+//
+//    private fun onBindRecentRecords(modelResponse: ModelResponse?) {
+//        when (modelResponse?.status) {
+//            ModelResponse.Loading -> {
+//
+//            }
+//            ModelResponse.Error -> {
+//
+//            }
+//            ModelResponse.Success -> {
+//                val list = modelResponse.value as MutableList<Record>
+//                binding.contentDashboard?.cardViewRecentRecords?.recordCallback = this
+//                binding.executePendingBindings()
+//                binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
+//            }
+//        }
+//    }
 
-            }
-            ModelResponse.Error -> {
 
-            }
-            ModelResponse.Success -> {
-                val list = modelResponse.value as MutableList<Record>
-                binding.contentDashboard?.cardViewUpcomingReminders?.recordCallback = this
-                binding.executePendingBindings()
-                binding.contentDashboard?.cardViewUpcomingReminders?.setCardList(list)
-            }
-        }
-    }
-
-    private fun onBindRecentRecords(modelResponse: ModelResponse?) {
-        when (modelResponse?.status) {
-            ModelResponse.Loading -> {
-
-            }
-            ModelResponse.Error -> {
-
-            }
-            ModelResponse.Success -> {
-                val list = modelResponse.value as MutableList<Record>
-                binding.contentDashboard?.cardViewRecentRecords?.recordCallback = this
-                binding.executePendingBindings()
-                binding.contentDashboard?.cardViewRecentRecords?.setCardList(list)
-            }
-        }
-    }
-
-    override fun showReport(categoryId: Int) {
-        starViewRecords(categoryId)
+    override fun showReport(filter: String) {
+        starViewRecords(filter)
     }
 
     override fun markReminderDone(record: Record) {

@@ -10,7 +10,7 @@ interface RecordCallback : CategoryCallback {
 //    fun updateReminders(list: MutableList<Record>)
 //    fun loadRecords()
 //    fun loadReminders()
-    fun showReport(categoryId:Int)
+    fun showReport(filter: String)
 
     fun markReminderDone(record: Record)
 

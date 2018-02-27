@@ -25,21 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <com.phoenix.budget.view.RecentExpensesDashboardView
-                android:id="@+id/card_view_recent_records"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:empty="@string/label_list_records_empty"
-                app:label="@string/list_recent_expenses" />
-
-            <com.phoenix.budget.view.UpcomingRemindersDashboardView
-                android:id="@+id/card_view_upcoming_reminders"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:empty="@string/label_list_reminder_empty"
-                app:label="@string/list_upcoming_reminders"
-                app:showMore="false" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </layout>

@@ -27,9 +27,9 @@ open class BudgetBaseActivity : AppCompatActivity(), CategoryCallback {
 
     override fun getIconId(catogoryId: Int): Int = if (catogoryId == -1) iconArr!![iconArr!!.size - 1] else iconArr!![catogoryId]
 
-    fun starViewRecords(category: Int) {
+    fun starViewRecords(filter: String) {
         val intent = Intent(this, RecordsActivity::class.java)
-        intent.putExtra(RecordsActivity.INTENT_REQUEST_VIEW, category)
+        intent.putExtra(RecordsActivity.INTENT_REQUEST_VIEW, filter)
         intent.putExtra(RecordsActivity.INTENT_REQUEST_IS_RESTRICTED, true)
         startActivityForResult(intent, ViewRequestID.RecordScreen.ordinal)
     }

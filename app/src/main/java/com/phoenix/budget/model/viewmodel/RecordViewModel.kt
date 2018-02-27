@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.persistence.BudgetApp
+import com.phoenix.budget.view.DashboardCardView
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +45,7 @@ class RecordViewModel : ViewModel() {
     fun loadRecentRecord(forceLoad: Boolean) {
         if (response.value == null || forceLoad) {
             disposable.add(
-                    BudgetApp.database.recordsDao().findRecentRecords()
+                    BudgetApp.database.recordsDao().findRecentRecords(DashboardCardView.ALL_ROWS)
                             .doOnSubscribe { _ -> response.postValue(ModelResponse.loading())}
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())

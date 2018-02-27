@@ -7,7 +7,8 @@ enum class SearchFilter(future: Boolean) {
     Recent(false),
     RecentExpense(false),
     RecentIncome(false),
-    Reminders(true);
+    ThisMonth(false),
+    LastMonth(false);
 
     val isFuture = future
 

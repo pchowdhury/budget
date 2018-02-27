@@ -81,8 +81,8 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     override fun markReminderDone(record: Record) {
     }
 
-    override fun showReport(categoryId: Int) {
-        starViewRecords(categoryId)
+    override fun showReport(filter: String) {
+        starViewRecords(filter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -23,7 +23,7 @@ fun setImageIcon(view: ImageView, record: Record, recordCallback: RecordCallback
         view.setColorFilter(ContextCompat.getColor(view.context, if (record.hasPassedDeadline()) R.color.color_red else R.color.color_green))
     } else {
         view.setImageResource(recordCallback.getIconId(record.categoryId))
-        view.setOnClickListener { recordCallback.showReport(record.categoryId) }
+        view.setOnClickListener { recordCallback.showReport(record.categoryId.toString()) }
     }
 }
 

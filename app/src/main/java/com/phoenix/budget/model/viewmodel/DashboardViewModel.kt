@@ -2,6 +2,7 @@ package com.phoenix.budget.model.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.phoenix.budget.model.BudgetFilter
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.RecurringRecord
 import com.phoenix.budget.model.RecurringRecord.RepeatType.*
@@ -21,8 +22,9 @@ import java.util.*
  * Created by Pushpan on 12/02/18.
  */
 class DashboardViewModel : ViewModel() {
-    private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
-    private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+    var hasInitialized = false
+//    private val recentRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+//    private val reminderRecordsResponse: MutableLiveData<ModelResponse> = MutableLiveData()
 
     private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
@@ -30,41 +32,69 @@ class DashboardViewModel : ViewModel() {
     private val calendar = Calendar.getInstance()
     var recordTobeDeleted : Record? = null
 
+    val filters = arrayListOf<BudgetFilter>()
+
+    fun addFilter(filter: BudgetFilter){
+        filters.add(filter)
+    }
+
     fun loadData(forced: Boolean) {
-        if (forced || recentRecordsResponse.value == null) {
-            loadRecentRecord()
+
+        if (forced || !hasInitialized) {
+            hasInitialized = true
+            filters.forEach { item ->
+                disposable.add(
+                        item.filterFunction()
+                                .doOnSubscribe { _ -> loading(item.recordsResponse) }
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        { r -> item.recordsResponse.value = ModelResponse.success(r) },
+                                        { throwable -> item.recordsResponse.value = ModelResponse.error(throwable) }
+                                )
+                )
+            }
         }
 
-        if (forced || reminderRecordsResponse.value == null) {
-            loadReminderRecordsRecord()
-        }
+
+
+
+
+//
+//        if (forced || recentRecordsResponse.value == null) {
+//            loadRecentRecord()
+//        }
+//
+//        if (forced || reminderRecordsResponse.value == null) {
+//            loadReminderRecordsRecord()
+//        }
     }
 
-    private fun loadRecentRecord() {
-        disposable.add(
-                BudgetApp.database.recordsDao().findLimitRecentRecords(DashboardCardView.MAX_ROWS)
-                        .doOnSubscribe { _ -> loading(recentRecordsResponse) }
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { r -> recentRecordsResponse.value = ModelResponse.success(r) },
-                                { throwable -> recentRecordsResponse.value = ModelResponse.error(throwable) }
-                        )
-        )
-    }
+//    private fun loadRecentRecord() {
+//        disposable.add(
+//                BudgetApp.database.recordsDao().findLimitRecentRecords(DashboardCardView.MAX_ROWS)
+//                        .doOnSubscribe { _ -> loading(recentRecordsResponse) }
+//                        .subscribeOn(Schedulers.newThread())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(
+//                                { r -> recentRecordsResponse.value = ModelResponse.success(r) },
+//                                { throwable -> recentRecordsResponse.value = ModelResponse.error(throwable) }
+//                        )
+//        )
+//    }
 
-    private fun loadReminderRecordsRecord() {
-        disposable.add(
-                BudgetApp.database.recordsDao().findLimitReminderRecords(DashboardCardView.MAX_ROWS)
-                        .doOnSubscribe { _ -> loading(reminderRecordsResponse) }
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { r -> reminderRecordsResponse.value = ModelResponse.success(r) },
-                                { throwable -> reminderRecordsResponse.value = ModelResponse.error(throwable) }
-                        )
-        )
-    }
+//    private fun loadReminderRecordsRecord() {
+//        disposable.add(
+//                BudgetApp.database.recordsDao().findLimitReminderRecords(DashboardCardView.MAX_ROWS)
+//                        .doOnSubscribe { _ -> loading(reminderRecordsResponse) }
+//                        .subscribeOn(Schedulers.newThread())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(
+//                                { r -> reminderRecordsResponse.value = ModelResponse.success(r) },
+//                                { throwable -> reminderRecordsResponse.value = ModelResponse.error(throwable) }
+//                        )
+//        )
+//    }
 
     fun updateReminders() {
         val timeNow = System.currentTimeMillis()
@@ -235,9 +265,9 @@ class DashboardViewModel : ViewModel() {
                 })
     }
 
-    fun recentRecordsResponse(): MutableLiveData<ModelResponse> = recentRecordsResponse
+//    fun recentRecordsResponse(): MutableLiveData<ModelResponse> = recentRecordsResponse
 
-    fun reminderRecordsResponse(): MutableLiveData<ModelResponse> = reminderRecordsResponse
+//    fun reminderRecordsResponse(): MutableLiveData<ModelResponse> = reminderRecordsResponse
 
     fun addRemindersResponse(): MutableLiveData<ModelResponse> = addRemindersResponse
 

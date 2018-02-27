@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.phoenix.budget.R
 import com.phoenix.budget.RecordCallback
+import com.phoenix.budget.model.BudgetFilter
 import com.phoenix.budget.model.Record
 import kotlinx.android.synthetic.main.dashboard_card_view.view.*
 
@@ -40,27 +41,50 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         val emptyLabel= a.getString(R.styleable.DashboardCardStyle_empty)
         val showMore = a.getBoolean(R.styleable.DashboardCardStyle_showMore, true)
         a?.recycle()
-        listRecordsTitle.text = label
-        listEmpty.text = emptyLabel
-        listMore.visibility = if (showMore) View.VISIBLE else View.GONE
+        setLabel(label)
+        setEmptyLabel(emptyLabel)
+        showMore(showMore)
         recycleView.layoutManager = LinearLayoutManager(context)
         listMore.setOnClickListener({ onMoreClick() })
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView(recycleView)
     }
 
-    open fun setCardList(list: MutableList<Record>) {
+    fun setLabel(title: String?) {
+        listRecordsTitle.text = title
+    }
+
+    fun setEmptyLabel(emptyLabel: String?) {
+        listEmpty.text = emptyLabel
+    }
+
+    fun showMore(show:Boolean?){
+        listMore.visibility = if (show!=null && show) View.VISIBLE else View.GONE
+    }
+
+    fun setCardList(type: BudgetFilter.BudgetFilterType, list: MutableList<Record>) {
+        recycleView.adapter =
+                if (type == BudgetFilter.BudgetFilterType.Record)
+                    RecordsAdapter(context, recordCallback, list)
+                else
+                    RemindersAdapter(context, recordCallback, list)
+        listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 
     open fun onSwipeRemove(position: Int){
     }
 
     fun onMoreClick() {
-        recordCallback.showReport(-1)
+    }
+
+    fun setOnMoreClick(onClick: () -> Unit) {
+        listMore.setOnClickListener({ onClick })
     }
 
     companion object {
         @JvmStatic
-        val MAX_ROWS = 5
+        val MAX_ROWS = "5"
+        @JvmStatic
+        val ALL_ROWS = Int.MAX_VALUE.toString()
     }
 }

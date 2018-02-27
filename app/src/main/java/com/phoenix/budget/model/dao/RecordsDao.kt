@@ -19,27 +19,50 @@ interface RecordsDao {
     @Query("SELECT * FROM records ORDER BY created_for DESC")
     fun findAllRecords(): Flowable<MutableList<Record>>
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC")
-    fun findRecentRecords(): Flowable<MutableList<Record>>
-
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC")
-    fun findReminderRecords(): Flowable<MutableList<Record>>
-
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC LIMIT :limit")
-    fun findLimitRecentRecords(limit: Int): Flowable<MutableList<Record>>
-
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC LIMIT :limit")
-    fun findLimitReminderRecords(limit: Int): Flowable<MutableList<Record>>
-
 //    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-//    @Query("SELECT * FROM records WHERE done = :isReminder ORDER BY created_for DESC LIMIT :limit")
-//    fun findLimitedRecords(isReminder:String, limit:Int): Flowable<MutableList<Record>>
+//    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC")
+//    fun findRecentRecords(): Flowable<MutableList<Record>>
 //
+//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+//    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC")
+//    fun findReminderRecords(): Flowable<MutableList<Record>>
 //
+//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+//    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC LIMIT :limit")
+//    fun findLimitRecentRecords(limit: Int): Flowable<MutableList<Record>>
+//
+//    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+//    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC LIMIT :limit")
+//    fun findLimitReminderRecords(limit: Int): Flowable<MutableList<Record>>
+
+
+
+
+    //new ones
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 ORDER BY updated_on DESC LIMIT 0,:limit")
+    fun findRecentRecords(limit: String): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 AND is_income = 0 ORDER BY updated_on DESC LIMIT 0,:limit")
+    fun findRecentExpenses(limit: String): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 1 AND is_income = 1 ORDER BY updated_on DESC LIMIT 0,:limit")
+    fun findRecentIncomes(limit: String): Flowable<MutableList<Record>>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC LIMIT 0,:limit")
+    fun findReminderRecords(limit: String): Flowable<MutableList<Record>>
+
+
+
+
+
+
+
+
+
 
 
 
