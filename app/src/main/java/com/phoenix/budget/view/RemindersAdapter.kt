@@ -17,7 +17,7 @@ import com.phoenix.budget.model.Record
  */
 
 
-class RemindersAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RemindersAdapter.RecordViewHolder>() {
+class RemindersAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RemindersAdapter.RecordViewHolder>(), DataFetcher {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
@@ -41,7 +41,7 @@ class RemindersAdapter(val context: Context, val recordCallback: RecordCallback,
     }
 
 
-    fun getDataAtPosition(position: Int): Record {
+    override fun getDataAtPosition(position: Int): Record {
         return reports[position]
     }
 

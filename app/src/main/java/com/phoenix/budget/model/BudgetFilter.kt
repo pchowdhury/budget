@@ -14,4 +14,11 @@ class BudgetFilter(val name: String, val type: BudgetFilterType, val filterFunct
         Reminder,
         Record
     }
+
+    companion object {
+        @JvmStatic
+        val MAX_ROWS = "5"
+        @JvmStatic
+        val ALL_ROWS = Int.MAX_VALUE.toString()
+    }
 }

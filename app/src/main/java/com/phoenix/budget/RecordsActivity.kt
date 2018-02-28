@@ -100,7 +100,7 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         }
     }
 
-    override fun onRemoveRecord(record: Record) {
+    override fun onRemoveRecord(filter: String, record: Record) {
     }
 
     companion object {

@@ -1,6 +1,8 @@
 package com.phoenix.budget.model.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
+import com.phoenix.budget.model.BudgetFilter
 import com.phoenix.budget.model.Record
 import com.phoenix.budget.model.RecurringRecord
 import com.phoenix.budget.model.RecurringRecord.RepeatType.*
@@ -9,6 +11,7 @@ import com.phoenix.budget.utils.Converter
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -17,10 +20,38 @@ import java.util.*
 /**
  * Created by Pushpan on 12/02/18.
  */
-class DashboardViewModel : BaseViewModel() {
+class DashboardViewModel1 : ViewModel() {
+    var hasInitialized = false
     private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
+    private var disposable = CompositeDisposable()
     private val calendar = Calendar.getInstance()
+    var recordTobeDeleted : Record? = null
+
+    val filters = arrayListOf<BudgetFilter>()
+
+    fun addFilter(filter: BudgetFilter){
+        filters.add(filter)
+    }
+
+    fun loadFilters(forced: Boolean) {
+
+        if (forced || !hasInitialized) {
+            hasInitialized = true
+            filters.forEach { item ->
+                disposable.add(
+                        item.filterFunction()
+                                .doOnSubscribe { _ -> loading(item.recordsResponse) }
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        { r -> item.recordsResponse.value = ModelResponse.success(r) },
+                                        { throwable -> item.recordsResponse.value = ModelResponse.error(throwable) }
+                                )
+                )
+            }
+        }
+    }
 
 
     fun updateReminders() {
@@ -105,6 +136,71 @@ class DashboardViewModel : BaseViewModel() {
     }
 
 
+    fun removeDashboardSingleRecord() {
+        if (recordTobeDeleted != null) {
+            val record = recordTobeDeleted
+            Single.create(SingleOnSubscribe<Int> { emitter ->
+                try {
+                    val ids = BudgetApp.database.recordsDao().deleteRecord(record)
+                    emitter.onSuccess(ids)
+                } catch (t: Throwable) {
+                    emitter.onError(t)
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeWith(object : DisposableSingleObserver<Int>() {
+                        override fun onSuccess(ids: Int) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.success(null)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.error(e)
+                        }
+                    })
+        }
+    }
+
+    fun removeDashboardRecurringRecord() {
+        if (recordTobeDeleted != null) {
+            val record = recordTobeDeleted
+            Single.create(SingleOnSubscribe<Boolean> { emitter ->
+                try {
+                    if (record != null) {
+                        BudgetApp.database.recurringRecordsDao().deleteRecurringRecordWithId(record.associatedId)
+                        BudgetApp.database.recordsDao().deleteAllRecordsWithAssociatedId(record.associatedId)
+                        emitter.onSuccess(true)
+                    }else{
+                        emitter.onSuccess(false)
+                    }
+                } catch (t: Throwable) {
+                    emitter.onError(t)
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribeWith(object : DisposableSingleObserver<Boolean>() {
+                        override fun onSuccess(success: Boolean) {
+                            clearRecordTobeDeleted()
+                            if(success){
+                                addRemindersResponse.value = ModelResponse.success(success)
+                            }else{
+                                addRemindersResponse.value = ModelResponse.error(Exception("Something went wrong"))
+                            }
+                        }
+
+                        override fun onError(e: Throwable) {
+                            clearRecordTobeDeleted()
+                            addRemindersResponse.value = ModelResponse.error(e)
+                        }
+                    })
+        }
+    }
+
+    fun clearRecordTobeDeleted(){
+        recordTobeDeleted = null
+    }
+
     fun markReminderDone(record: Record) {
         record.updatedOn = Date(System.currentTimeMillis())
         record.done = true
@@ -131,4 +227,12 @@ class DashboardViewModel : BaseViewModel() {
 
     fun updateRemindersResponse(): MutableLiveData<ModelResponse> = updateRemindersResponse
 
+    private fun loading(response: MutableLiveData<ModelResponse>) {
+        response.postValue(ModelResponse.loading())
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
 }

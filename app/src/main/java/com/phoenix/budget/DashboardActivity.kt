@@ -20,7 +20,6 @@ import com.phoenix.budget.model.viewmodel.ModelResponse
 import com.phoenix.budget.model.ViewRequestID
 import com.phoenix.budget.persistence.BudgetApp
 import com.phoenix.budget.view.DashboardCardView
-import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, ConfirmationDialogFragment.ConfirmationCallback {
@@ -41,34 +40,22 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
 
         if (!viewModel.hasInitialized) {
             viewModel.addFilter(BudgetFilter("Recent events", BudgetFilter.BudgetFilterType.Record, {
-                BudgetApp.database.recordsDao().findRecentRecords(DashboardCardView.MAX_ROWS)
+                BudgetApp.database.recordsDao().findRecentRecords(BudgetFilter.MAX_ROWS)
             }, { showReport("Recent events") }))
             viewModel.addFilter(BudgetFilter("Recent Expenses", BudgetFilter.BudgetFilterType.Record, {
-                BudgetApp.database.recordsDao().findRecentExpenses(DashboardCardView.MAX_ROWS)
+                BudgetApp.database.recordsDao().findRecentExpenses(BudgetFilter.MAX_ROWS)
             }, { showReport("Recent Expenses") }))
             viewModel.addFilter(BudgetFilter("Recent Incomes", BudgetFilter.BudgetFilterType.Record, {
-                BudgetApp.database.recordsDao().findRecentIncomes(DashboardCardView.MAX_ROWS)
+                BudgetApp.database.recordsDao().findRecentIncomes(BudgetFilter.MAX_ROWS)
             }, { showReport("Recent Incomes") }))
             viewModel.addFilter(BudgetFilter("Upcoming events", BudgetFilter.BudgetFilterType.Reminder, {
-                BudgetApp.database.recordsDao().findReminderRecords(DashboardCardView.ALL_ROWS)
+                BudgetApp.database.recordsDao().findReminderRecords(BudgetFilter.ALL_ROWS)
             }, { showReport("Upcoming events") }))
         }
 
         viewModel.filters.forEach {
             it -> addListFilterType(it)
         }
-
-//        viewModel.filters.forEach { it ->
-//            it.recordsResponse.observe(this, Observer<ModelResponse> { response -> onBindRecords(it, response) })
-//        }
-
-//
-//        viewModel.recentRecordsResponse().observe(this, Observer<ModelResponse> { response ->
-//            onBindRecentRecords(response)
-//        })
-//        viewModel.reminderRecordsResponse().observe(this, Observer<ModelResponse> { response ->
-//            onBindReminderRecords(response)
-//        })
 
         viewModel.addRemindersResponse().observe(this, Observer<ModelResponse> { response ->
             onFinishUpdatingReminders(response)
@@ -79,7 +66,7 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         })
 
         supportFragmentManager.beginTransaction().replace(R.id.menu_container, menuFragment, MenuFragment.TAG).commit()
-        viewModel.loadData(false)
+        viewModel.loadFilters(false)
     }
 
     private fun addListFilterType(filter: BudgetFilter) {
@@ -87,6 +74,7 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         view.setLabel(filter.name)
         view.setEmptyLabel("No "+ filter.name.toLowerCase())
         view.setOnMoreClick(filter.onMore)
+        view.filterName = filter.name
         binding.contentDashboard?.layoutLists?.addView(view)
         filter.recordsResponse.observe(this, Observer<ModelResponse> { response -> onBindRecords(filter.type, view, response) })
     }
@@ -97,14 +85,14 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
 
             }
             ModelResponse.Error -> {
-//                viewModel.loadData(true)
+//                viewModel.loadFilters(true)
             }
             ModelResponse.Success -> {
                 val list = modelResponse.value as MutableList<Record>
                 view.recordCallback = this
 //                binding.executePendingBindings()
                 view.setCardList(filterType, list)
-//                viewModel.loadData(true)
+//                viewModel.loadFilters(true)
             }
         }
 
@@ -116,10 +104,10 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
 
             }
             ModelResponse.Error -> {
-                viewModel.loadData(true)
+                viewModel.loadFilters(true)
             }
             ModelResponse.Success -> {
-                viewModel.loadData(true)
+                viewModel.loadFilters(true)
             }
         }
     }
@@ -167,8 +155,8 @@ class DashboardActivity : BudgetBaseActivity(), RecordCallback, MenuCallback, Co
         viewModel.markReminderDone(record)
     }
 
-    override fun onRemoveRecord(record: Record) {
-        viewModel.recordTobeDeleted = record
+    override fun onRemoveRecord(filter:String, record: Record) {
+        viewModel.markItemToBeDeleted(filter, record)
         if (!record.done) {
             val f = ConfirmationDialogFragment.create(DIALOG_REMOVE_RECORD, getString(R.string.dialog_title_confirmation), getString(R.string.dialog_recurring_confirmation))
             f.show(supportFragmentManager, ConfirmationDialogFragment.TAG)

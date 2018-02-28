@@ -18,7 +18,7 @@ import com.phoenix.budget.model.Record
  * Created by Pushpan on 05/02/18.
  */
 
-class RecordsAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>() {
+class RecordsAdapter(val context: Context, val recordCallback: RecordCallback, val reports: MutableList<Record>) : RecyclerView.Adapter<RecordsAdapter.RecordViewHolder>(), DataFetcher {
 
     inner class RecordViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Record) {
@@ -42,7 +42,7 @@ class RecordsAdapter(val context: Context, val recordCallback: RecordCallback, v
     }
 
 
-    fun getDataAtPosition(position: Int): Record {
+    override fun getDataAtPosition(position: Int): Record {
         return reports[position]
     }
 

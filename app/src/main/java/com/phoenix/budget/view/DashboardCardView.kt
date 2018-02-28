@@ -22,6 +22,7 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
 
     lateinit var recordCallback: RecordCallback
+    var filterName: String = ""
 
     var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -40,6 +41,8 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         val label = a.getString(R.styleable.DashboardCardStyle_label)
         val emptyLabel= a.getString(R.styleable.DashboardCardStyle_empty)
         val showMore = a.getBoolean(R.styleable.DashboardCardStyle_showMore, true)
+        val filter = a.getString(R.styleable.DashboardCardStyle_filterName)
+        filterName = filter ?: ""
         a?.recycle()
         setLabel(label)
         setEmptyLabel(emptyLabel)
@@ -71,7 +74,10 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
         listEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    open fun onSwipeRemove(position: Int){
+    open fun onSwipeRemove(position: Int) {
+        if (recycleView.adapter != null) {
+            recordCallback.onRemoveRecord(filterName, (recycleView.adapter as DataFetcher).getDataAtPosition(position))
+        }
     }
 
     fun onMoreClick() {
@@ -79,12 +85,5 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
 
     fun setOnMoreClick(onClick: () -> Unit) {
         listMore.setOnClickListener({ onClick })
-    }
-
-    companion object {
-        @JvmStatic
-        val MAX_ROWS = "5"
-        @JvmStatic
-        val ALL_ROWS = Int.MAX_VALUE.toString()
     }
 }

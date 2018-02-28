@@ -21,5 +21,6 @@
         <attr name="label" format="string"/>
         <attr name="empty" format="string"/>
         <attr name="showMore" format="boolean"/>
+        <attr name="filterName" format="string"/>
     </declare-styleable>
 </resources>

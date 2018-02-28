@@ -14,5 +14,5 @@ interface RecordCallback : CategoryCallback {
 
     fun markReminderDone(record: Record)
 
-    fun onRemoveRecord(record: Record)
+    fun onRemoveRecord(filterName:String, record: Record)
 }
