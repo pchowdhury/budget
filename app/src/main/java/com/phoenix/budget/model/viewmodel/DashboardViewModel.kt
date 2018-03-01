@@ -17,7 +17,7 @@ import java.util.*
 /**
  * Created by Pushpan on 12/02/18.
  */
-class DashboardViewModel : BaseViewModel() {
+class DashboardViewModel : ReportViewModel() {
     private val addRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val updateRemindersResponse: MutableLiveData<ModelResponse> = MutableLiveData()
     private val calendar = Calendar.getInstance()

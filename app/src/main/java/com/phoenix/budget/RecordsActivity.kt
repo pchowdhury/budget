@@ -10,15 +10,16 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import com.phoenix.budget.databinding.ActivityReportsBinding
+import com.phoenix.budget.model.BudgetFilter
 import com.phoenix.budget.model.Record
+import com.phoenix.budget.model.viewmodel.ReportViewModel
 import com.phoenix.budget.model.viewmodel.ModelResponse
-import com.phoenix.budget.model.viewmodel.RecordViewModel
 import com.phoenix.budget.view.RecordsAdapter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     lateinit var binding: ActivityReportsBinding
-    lateinit var viewModel: RecordViewModel
+    lateinit var viewModel: ReportViewModel
 
     var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -39,10 +40,7 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
         binding.contentReports?.recycleView?.layoutManager = LinearLayoutManager(this)
         val itemTouchHelper = ItemTouchHelper(simpleCallback)
         itemTouchHelper.attachToRecyclerView( binding.contentReports?.recycleView)
-        viewModel = ViewModelProviders.of(this).get(RecordViewModel::class.java)
-        viewModel.response().observe(this, Observer{
-            response-> onBindRecords(response)
-        })
+        viewModel = ViewModelProviders.of(this).get(ReportViewModel::class.java)
         loadRecords()
     }
 
@@ -69,13 +67,20 @@ class RecordsActivity : BudgetBaseActivity(), RecordCallback {
     }
 
     fun removeRecord(record: Record) {
-        viewModel.removeSingleRecord(record)
+//        viewModel.removeSingleRecord(record)
     }
 
 
     fun loadRecords() {
-        val categoryId = intent.getIntExtra(INTENT_REQUEST_VIEW, -1)
-        viewModel.loadRecords(categoryId, false)
+        if(!viewModel.hasInitialized) {
+            val filter = intent.getStringExtra(INTENT_REQUEST_VIEW)
+            viewModel.addFilter(BudgetFilter.getFilterFor(filter, false))
+        }
+        viewModel.filters.forEach {
+            filter ->  filter.recordsResponse.observe(this, Observer<ModelResponse> { response -> onBindRecords(response)})
+
+        }
+        viewModel.loadFilters(true)
     }
 
     override fun markReminderDone(record: Record) {

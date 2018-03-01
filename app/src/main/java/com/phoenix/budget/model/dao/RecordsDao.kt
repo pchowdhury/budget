@@ -54,8 +54,9 @@ interface RecordsDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE done = 0 ORDER BY created_for ASC LIMIT 0,:limit")
     fun findReminderRecords(limit: String): Flowable<MutableList<Record>>
-
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM records WHERE records.category_id = :id AND records.is_income = 0 AND done = 1 ORDER BY updated_on DESC LIMIT :limit")
+    fun findRecordsByCategoryId(id: Int, limit: String): Flowable<MutableList<Record>>
 
 
 
@@ -85,9 +86,7 @@ interface RecordsDao {
 
 
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM records WHERE records.category_id = :id AND records.is_income = 0 LIMIT :limit")
-    fun findRecordsByCategoryId(id: Int, limit:Int): Flowable<MutableList<Record>>
+
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM records WHERE records.category_id = :id AND records.done = 1 ORDER BY updated_on DESC")

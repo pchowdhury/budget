@@ -81,9 +81,10 @@ open class DashboardCardView @kotlin.jvm.JvmOverloads constructor(
     }
 
     fun onMoreClick() {
+        recordCallback.showReport(filterName)
     }
 
-    fun setOnMoreClick(onClick: () -> Unit) {
-        listMore.setOnClickListener({ onClick })
-    }
+//    fun setOnMoreClick(onClick: () -> Unit) {
+//        listMore.setOnClickListener({ onClick })
+//    }
 }

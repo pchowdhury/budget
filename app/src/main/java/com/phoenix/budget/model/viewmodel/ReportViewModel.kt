@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by Pushpan on 12/02/18.
  */
-open class BaseViewModel : ViewModel() {
+open class ReportViewModel : ViewModel() {
     var hasInitialized = false
     var disposable = CompositeDisposable()
     var recordTobeDeleted : Record? = null
